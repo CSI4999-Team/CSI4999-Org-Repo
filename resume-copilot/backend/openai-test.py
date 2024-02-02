@@ -1,22 +1,31 @@
 import openai
-import os
 from dotenv import load_dotenv
+import os
 
-# Define Client
-client = OpenAI()
-
-# Load API Token from the .env file
+# Load environment variables
 load_dotenv()
 
-# Take the OPENAI_API_KEY from .env
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Retrieve API key from environment variables
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
-completion = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages=[
-    {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
-    {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
-  ]
-)
+# Initialize OpenAI client with the API key
+client = openai.OpenAI(api_key=openai_api_key)
 
-print(completion.choices[0].message)
+try:
+    # Make a single request to the OpenAI API
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": "Say this is a test",
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
+    print(chat_completion)
+except openai.RateLimitError:
+    print("Rate limit exceeded. Please try again later.")
+except openai.OpenAIError as e:
+    print(f"An OpenAI API error occurred: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
