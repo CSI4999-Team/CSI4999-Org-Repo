@@ -8,7 +8,7 @@ from fpdf import FPDF
 # Retrieve API key from environment variables
 openai.api_key = os.getenv("OPENAI_API_KEY")
 # Hardcoded PDF file path
-pdf_path = r"C:\Users\Jacob\OneDrive - oakland.edu\Documents\Desktop\Jacob Souro New Resume 2024.pdf"
+pdf_path = r"PATH TO RESUME FOR GPT TO REVIEW"
     
 # Read PDF content
 doc = fitz.open(pdf_path)
@@ -29,7 +29,7 @@ try:
     response_text = openai_response.choices[0].message.content if openai_response.choices else "No response"
     class PDF(FPDF):
         def header(self):
-            self.add_font('DejaVu', '', r'C:\Users\Jacob\CSI4999-Org-Repo\resume-copilot\backend\api\DejaVuSansCondensed.ttf', uni=True)
+            self.add_font('DejaVu', '', r'PATH TO TTF FILE - TEMP', uni=True)
             self.set_font('DejaVu', '', 12)
             self.cell(0, 10, 'GPT Response', 0, 1, 'C')
 
@@ -45,7 +45,7 @@ try:
     pdf.set_font('DejaVu', '', 12)
     pdf.multi_cell(0, 10, response_text)
 
-    pdf_output_path = r"C:\Users\Jacob\OneDrive - oakland.edu\Documents\Desktop\GPT_Response.pdf"
+    pdf_output_path = r"PUT PATH TO HAVE PDF OUTPUT HERE"
     pdf.output(pdf_output_path)
 
     print(f"PDF generated: {pdf_output_path}")
