@@ -19,7 +19,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-} ignore for now */ 
+} ignore for now */
 
 textarea {
   margin: 10px 0;
@@ -110,4 +110,64 @@ button {
   flex-direction: column;
   align-items: center;
   margin-top: 10px;
+}
+
+.left-bar {
+  width: 250px;
+  height: 100%;
+  background-color: #f4f4f4;
+  position: fixed;
+  left: -250px;
+  top: 0;
+  transition: left 0.3s ease;
+}
+
+.left-bar.open {
+  left: 0;
+  /* Move the left bar into view when it's open */
+}
+
+.content {
+  transition: margin-left 0.3s;
+}
+
+.content.sidebar-open {
+  margin-left: 250px;
+}
+
+
+/* Radio button design: https: //www.youtube.com/watch?v=GDh9uToZkYg */
+.radio {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 25px;
+  box-shadow: 0 0 5px black;
+
+  /* display: none; */
+}
+
+.radioInput {
+  display: none;
+}
+
+.radioLabel {
+  padding: 8px 14px;
+  font-size: 20px;
+  color: #ffffff;
+  background: #403b3b;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.radioInput:checked+.radioLabel {
+  background: black;
+}
+
+/* Url styling */
+.urlInput {
+  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 300px;
 }
