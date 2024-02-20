@@ -5,8 +5,20 @@ import os
 import fitz  # PyMuPDF
 from fpdf import FPDF
 
+# Import Secret Functions from Vault
+#from vault_util import *
+# Import functions from vault_util
+from utils.vault_util import *
+
+# Function to get OpenAI API key from Vault
+def get_openai_api_key():
+    hcp_api_token = get_hcp_api_token()
+    secret_data = read_secret_from_vault(hcp_api_token)
+    return get_secrets(secret_data, "OPENAI_API_KEY")  # Replace with the actual secret name
+
 # Retrieve API key from environment variables
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = get_openai_api_key()
+
 # Hardcoded PDF file path
 pdf_path = r"PATH TO RESUME FOR GPT TO REVIEW"
     
