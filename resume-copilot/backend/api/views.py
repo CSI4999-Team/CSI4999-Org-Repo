@@ -5,13 +5,15 @@ import os
 import fitz  # PyMuPDF
 from fpdf import FPDF
 
-# Set path otherwise error :(
-import sys
-sys.path.append("/Users/matthew/Desktop/CSI4999-Org-Repo/resume-copilot/backend")
+# Set path otherwise error, but only locally?
+#import sys
+#sys.path.append("/Users/matthew/Desktop/CSI4999-Org-Repo/resume-copilot/backend")
 
 # Import Secret Functions from Vault
 from utils.vault_util import *
 
+def my_view(request):
+    return HttpResponse("This is a test response.")
 
 # Function to get OpenAI API key from Vault
 def get_openai_api_key():
