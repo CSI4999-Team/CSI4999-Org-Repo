@@ -20,6 +20,8 @@ def get_hcp_api_token():
 
     response = requests.post(token_url, json=payload)
 
+# TODO: Convert to Vault Agent rather than using .env file locally
+# For now, ensure in backend you have a .env file that contains HCP_CLIENT_ID and HCP_CLIENT_SECRET as found in Vault for the OpenAI token
     if response.status_code == 200:
         print("HCP API token obtained successfully.")
         return response.json().get('access_token')
