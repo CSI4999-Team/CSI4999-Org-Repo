@@ -5,10 +5,13 @@ import os
 import fitz  # PyMuPDF
 from fpdf import FPDF
 
+# Set path otherwise error :(
+import sys
+sys.path.append("/Users/matthew/Desktop/CSI4999-Org-Repo/resume-copilot/backend")
+
 # Import Secret Functions from Vault
-#from vault_util import *
-# Import functions from vault_util
 from utils.vault_util import *
+
 
 # Function to get OpenAI API key from Vault
 def get_openai_api_key():
