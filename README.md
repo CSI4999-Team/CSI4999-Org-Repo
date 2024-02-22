@@ -17,13 +17,22 @@ What things you need to install the software and how to install them:
 * To run locally: ```git clone https://github.com/CSI4999-Team/CSI4999-Org-Repo.git```
 * ```cd resume-copilot```
 * This will run the frontend on http://localhost:3000:
+
  ```npm install``` 
+
  ```npm start```
+
 * To activate the Django backend:
+
  ```cd backend```
+
  ```python -m venv venv```
- ```source venv/bin/activate``` # On Windows use `venv\Scripts\activate`
+
+ ```source venv/bin/activate``` 
+ # On Windows use `venv\Scripts\activate`
+
  ```pip install -r requirements.txt```
+ 
  ```python manage.py runserver```
 
 ## Deployment
