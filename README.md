@@ -28,7 +28,7 @@ What things you need to install the software and how to install them:
 
  ```python -m venv venv```
 
- ```source venv/bin/activate``` 
+***On Linux/MacOS use*** ```source venv/bin/activate``` 
 
 ***On Windows use*** `venv\Scripts\activate`
 
