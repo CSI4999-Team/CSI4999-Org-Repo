@@ -22,17 +22,18 @@ What things you need to install the software and how to install them:
 
  ```npm start```
 
-* To activate the Django backend:
+* To activate the Django backend, which will run on http://localhost:8000:
 
  ```cd backend```
 
  ```python -m venv venv```
 
  ```source venv/bin/activate``` 
- # On Windows use `venv\Scripts\activate`
+
+***On Windows use*** `venv\Scripts\activate`
 
  ```pip install -r requirements.txt```
- 
+
  ```python manage.py runserver```
 
 ## Deployment
