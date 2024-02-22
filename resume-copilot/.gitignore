@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# This is the overall .gitignore file, add OS and software specific things we want to ignore on an overall level here:
+/venv
+
 # dependencies
 /node_modules
 /.pnp
