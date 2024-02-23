@@ -1,3 +1,4 @@
+from urllib import response
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import openai
@@ -6,6 +7,7 @@ import fitz  # PyMuPDF for PDF processing
 from utils.vault_util import *
 
 # Load environment variables
+from dotenv import load_dotenv
 load_dotenv()
 
 def get_openai_api_key():
@@ -36,14 +38,17 @@ def parse_pdf(request):
     else:
         return HttpResponse("Invalid request", status=400)
     
+# Initialize OpenAI client with the API key
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 @csrf_exempt
 def analyze_resume(request):
     if request.method == 'POST':
         try:
             user_message = request.POST.get('user_message', '')  # Get the user message from the request body
 
-            # Make a request to the OpenAI API using the user message
-            response = openai.ChatCompletion.create(
+            # Make a single request to the OpenAI API using the user message
+            chat_completion = client.chat.completions.create(
                 messages=[
                     {
                         "role": "user",
@@ -53,7 +58,10 @@ def analyze_resume(request):
                 model="gpt-3.5-turbo",
             )
 
-            return JsonResponse({'response': response.choices[0].message.strip()})
+            # Ensure the response is in text format
+            response_text = chat_completion.choices[0].message.content.strip()
+
+            return JsonResponse({'response': response_text})
         except openai.RateLimitError:
             return JsonResponse({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
         except openai.OpenAIError as e:
