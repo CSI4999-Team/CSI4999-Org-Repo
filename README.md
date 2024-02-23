@@ -22,9 +22,9 @@ What things you need to install the software and how to install them:
 
  ```npm start```
 
-* To activate the Django backend, which will run on http://localhost:8000:
+* To activate the Django backend, which will run on http://127.0.0.1:8000:
 
- ```cd backend```
+***stay in cd resume-copilot folder to create venv***
 
  ```python -m venv venv```
 
@@ -34,7 +34,23 @@ What things you need to install the software and how to install them:
 
  ```pip install -r requirements.txt```
 
+ ```cd backend```
+
+ **We need to create a .env file to store secrets for Vault to pull!**
+ ***TODO: This should be taken care of in the future with Vault Agent***
+ * Inside the backend folder, create a .env file, inside it copy paste:
+ ```HCP_CLIENT_ID = "INSERT_SECRET_HERE"```
+ ```HCP_CLIENT_SECRET = "INSERT_SECRET_HERE"```
+
+ **We can now run the backend server**
+
  ```python manage.py runserver```
+
+**If you encounter errors:**
+* Run ```python where```
+* Copy the python pathing and click the drop down from the top that says "Enter interpreter path..."
+* Paste and hit enter
+* Restart your venv, going to source venv/bin/activate (linux example) (remember you need to be inside the resume-copilot folder)
 
 ## Deployment
 
