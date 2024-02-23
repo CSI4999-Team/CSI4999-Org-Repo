@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import LeftBar from "./components/LeftBar"; // Importing the LeftBar component
-import UploadForm from './components/UploadForm'; // Importing the UploadForm component
+import LeftBar from "./components/LeftBar";
+import UploadForm from './components/UploadForm';
 import "./App.css";
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false); // used to set/open sidebar (starts at false, meaning closed/not open)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -24,6 +24,10 @@ function App() {
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar open/close
+  };
+
+  const handleAnalysisComplete = (analysisResult) => {
+    setJobDescription(prevDescription => prevDescription + "\n\nAnalysis:\n" + analysisResult);
   };
 
   return (
@@ -59,8 +63,7 @@ function App() {
               Submit
             </button>
           </form>
-          {/* Adding the UploadForm component */}
-          <UploadForm />
+          <UploadForm onAnalysisComplete={handleAnalysisComplete} />
         </main>
       </div>
     </div>

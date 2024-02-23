@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function UploadForm() {
+function UploadForm({ onAnalysisComplete }) { // Add completion parameter here for later
     const [file, setFile] = useState(null);
 
     const handleFileChange = (event) => {
@@ -30,13 +30,17 @@ function UploadForm() {
             const analyzeResponse = await fetch('http://localhost:8000/api/analyze_resume/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Set the content type to JSON
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ resume_text: resumeText }), // Pass the resume_text in the request body
+                body: JSON.stringify({ resume_text: resumeText }),
             });
             const analyzeData = await analyzeResponse.json();
-            console.log(analyzeData);
-            // Handle the response data
+
+            // Call the callback with the analysis result
+            if (onAnalysisComplete) {
+                onAnalysisComplete(analyzeData.response);
+            }
+
         } catch (error) {
             console.error("Error during file upload:", error);
         }

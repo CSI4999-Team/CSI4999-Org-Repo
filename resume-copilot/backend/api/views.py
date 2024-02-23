@@ -34,6 +34,10 @@ def parse_pdf(request):
         doc.close()
 
         # Return the extracted text as a response
+        # Store the extracted text in the session or another storage
+        request.session['resume_text'] = text  # Example using Django session
+        request.session.save()  # Explicitly save the session
+        
         return JsonResponse({'extracted_text': text})
     else:
         return HttpResponse("Invalid request", status=400)
@@ -45,15 +49,17 @@ client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def analyze_resume(request):
     if request.method == 'POST':
         try:
+            # Retrieve the resume text from the session or other storage
+            resume_text = request.session.get('resume_text', '')
+
             user_message = request.POST.get('user_message', '')  # Get the user message from the request body
 
             # Make a single request to the OpenAI API using the user message
             chat_completion = client.chat.completions.create(
                 messages=[
-                    {
-                        "role": "user",
-                        "content": user_message,
-                    }
+                    {"role": "system", "content": "You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. Please provide some feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, just give general feedback."},
+                    {"role": "user", "content": resume_text},  # Resume text as context
+                    {"role": "user", "content": user_message}
                 ],
                 model="gpt-3.5-turbo",
             )
