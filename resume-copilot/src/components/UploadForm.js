@@ -18,7 +18,7 @@ function UploadForm() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/api/process_pdf/', {
+            const response = await fetch('http://localhost:8000/api/parse_pdf/', {
                 method: 'POST',
                 body: formData,
             });
