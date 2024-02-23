@@ -18,12 +18,24 @@ function UploadForm() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/api/parse_pdf/', {
+            // Step 1: Extract resume text from the uploaded PDF file
+            const parseResponse = await fetch('http://localhost:8000/api/parse_pdf/', {
                 method: 'POST',
                 body: formData,
             });
-            const data = await response.json();
-            console.log(data);
+            const parseData = await parseResponse.json();
+            const resumeText = parseData.extracted_text;
+
+            // Step 2: Analyze the extracted resume text
+            const analyzeResponse = await fetch('http://localhost:8000/api/analyze_resume/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set the content type to JSON
+                },
+                body: JSON.stringify({ resume_text: resumeText }), // Pass the resume_text in the request body
+            });
+            const analyzeData = await analyzeResponse.json();
+            console.log(analyzeData);
             // Handle the response data
         } catch (error) {
             console.error("Error during file upload:", error);

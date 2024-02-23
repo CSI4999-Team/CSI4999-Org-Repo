@@ -1,15 +1,23 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import openai
+import os
 import fitz  # PyMuPDF for PDF processing
 from utils.vault_util import *
+
+# Load environment variables
+load_dotenv()
 
 def get_openai_api_key():
     hcp_api_token = get_hcp_api_token()
     secret_data = read_secret_from_vault(hcp_api_token)
     return get_secrets(secret_data, "OPENAI_API_KEY")
 
-openai.api_key = get_openai_api_key()
+# Retrieve API key from environment variables
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# TODO: Figure out why Vault version doesnt get stored AT ALL :(
+#openai.api_key = get_openai_api_key()
 
 @csrf_exempt
 def parse_pdf(request):
@@ -32,23 +40,25 @@ def parse_pdf(request):
 def analyze_resume(request):
     if request.method == 'POST':
         try:
-            resume_text = request.POST.get('resume_text', '')  # Get the resume text from the request
+            user_message = request.POST.get('user_message', '')  # Get the user message from the request body
 
-            # Make a request to the OpenAI API using the resume text
-            response = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=f"Analyze this resume: {resume_text}",
-                max_tokens=150
+            # Make a request to the OpenAI API using the user message
+            response = openai.ChatCompletion.create(
+                messages=[
+                    {
+                        "role": "user",
+                        "content": user_message,
+                    }
+                ],
+                model="gpt-3.5-turbo",
             )
 
-            return JsonResponse({'feedback': response.choices[0].text.strip()})
+            return JsonResponse({'response': response.choices[0].message.strip()})
         except openai.RateLimitError:
             return JsonResponse({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
         except openai.OpenAIError as e:
-            logger.error(f"An OpenAI API error occurred: {e}")
             return JsonResponse({'error': str(e)}, status=500)
         except Exception as e:
-            logger.error(f"An unexpected error occurred: {e}")
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
