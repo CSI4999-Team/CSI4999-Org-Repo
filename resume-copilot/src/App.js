@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LeftBar from "./components/LeftBar"; // Importing the LeftBar component
+import UploadForm from './components/UploadForm'; // Importing the UploadForm component
 import "./App.css";
 
 function App() {
@@ -26,85 +27,23 @@ function App() {
   };
 
   return (
-    // Overarching div for entire application
     <div className="App">
-      {/* Have the sidebar div outside of everything so it can be opened from the side... might change later to underneath navbar */}
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
-        {/* The navbar */}
         <header className="App-header">
-          <div>
-            <nav className="App">
-              <a
-                href="/"
-                className="logo"
-                onClick={() => setSidebarOpen(false)}
-              >
-                <img
-                  src="..\public\favicon.ico"
-                  alt="Resume Co-Pilot"
-                  className="logo-img"
-                />
-              </a>
-              <div className="nav-links">
-                <a href="#about" className="nav-link">
-                  About
-                </a>
-                <a href="#faq" className="nav-link">
-                  FAQ
-                </a>
-              </div>
-            </nav>
-          </div>
+          {/* ...Navbar content... */}
         </header>
-        {/* The main class holding the actual chatbox elements */}
         <main className="App-main">
-          {/* This is what opens the left bar... just click! */}
-          <LeftBar isOpen={sidebarOpen} /> {/* Pass isOpen prop to LeftBar */}
+          <LeftBar isOpen={sidebarOpen} />
           <div className="toggle-button" onClick={toggleSidebar}>
             Toggle Sidebar
           </div>
           <h1>Resume Co-Pilot</h1>
-          {/* Radio button design, here until replaced */}
-          <div className="radio">
-            <input
-              className="radioInput"
-              type="radio"
-              value="option1"
-              name="myRadio"
-              id="myRadio1"
-            />
-            <label className="radioLabel" htmlFor="myRadio1">
-              Computer Science
-            </label>
-
-            <input
-              className="radioInput"
-              type="radio"
-              value="option2"
-              name="myRadio"
-              id="myRadio2"
-            />
-            <label className="radioLabel" htmlFor="myRadio2">
-              Computer Engineering
-            </label>
-
-            <input
-              className="radioInput"
-              type="radio"
-              value="option3"
-              name="myRadio"
-              id="myRadio3"
-            />
-            <label className="radioLabel" htmlFor="myRadio3">
-              Electrical Engineering
-            </label>
-          </div>
+          {/* ...Radio button design... */}
           <input
             className="urlInput"
             type="text"
             placeholder="Enter URL here"
           />
-          {/* This is for the textbox */}
           <form onSubmit={handleSubmit}>
             <input
               className="input-button"
@@ -120,6 +59,8 @@ function App() {
               Submit
             </button>
           </form>
+          {/* Adding the UploadForm component */}
+          <UploadForm />
         </main>
       </div>
     </div>
