@@ -25,6 +25,7 @@ const Uploader = () => {
           id="input-file-field"
           onChange={handleFileChange}
           hidden
+          accept="application"
         />
         <div
           id="img-view"
