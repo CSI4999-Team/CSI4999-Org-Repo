@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LeftBar from "./components/LeftBar"; // Importing the LeftBar component
+import Uploader from "./components/Uploader"; // Importing the Uploader component
 import "./App.css";
 
 function App() {
@@ -105,12 +106,23 @@ function App() {
             placeholder="Enter URL here"
           />
           {/* This is for the textbox */}
+          {/* <div class="drop-field">
+            <label for="input-file-field" id="drop-area">
+              <input
+                type="file"
+                accept=""
+                id="input-file-filed"
+                onChange={handleFileChange}
+              ></input>
+            </label>
+          </div> */}
+          <Uploader/>
           <form onSubmit={handleSubmit}>
-            <input
+            {/* <input
               className="input-button"
               type="file"
               onChange={handleFileChange}
-            />
+            /> */}
             <textarea
               placeholder="Paste job description here"
               value={jobDescription}
