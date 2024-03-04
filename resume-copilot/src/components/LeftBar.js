@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
-import { motion, useTransform, useScroll } from "framer-motion"; //frame motion allows for scroll and transfromation
+import { motion, useTransform, useScroll, color } from "framer-motion"; //frame motion allows for scroll and transfromation
+import "./LeftBar.css";
 
 const LeftBar = ({ isOpen }) => {
   const targetRef = useRef(null);
@@ -32,9 +33,9 @@ const LeftBar = ({ isOpen }) => {
     <motion.div
       ref={targetRef} //not exactly sure how this works, "a reference to the component's element, used for scroll tracking and animations."
       className={`left-bar ${isOpen ? "open" : ""}`}
-      style={{ x }}
+      style={{ x, backgroundColor: "#282C34" }}
     >
-      <h2>Previous Resume Suggestions</h2>
+      <h2 class="prevRes">History</h2>
       <ul>
         {oldResumeSuggestions.map((resume, index) => (
           <li key={index}>
