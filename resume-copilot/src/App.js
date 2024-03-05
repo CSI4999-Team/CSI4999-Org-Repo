@@ -49,7 +49,6 @@ function App() {
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
         <header className="App-header">{/* Navbar content */}</header>
         <div className="toggle-button" onClick={toggleSidebar}>
-          P
         </div>
         <main className="App-main">
           <LeftBar isOpen={sidebarOpen} />
