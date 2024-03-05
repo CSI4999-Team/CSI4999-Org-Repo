@@ -1,3 +1,4 @@
+import json
 from urllib import response
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -50,9 +51,10 @@ def analyze_resume(request):
     if request.method == 'POST':
         try:
             # Retrieve the resume text from the session or other storage
-            resume_text = request.session.get('resume_text', '')
+            data = json.loads(request.body)  # Correctly load the JSON data sent from the frontend
+            resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
+            user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
 
-            user_message = request.POST.get('user_message', '')  # Get the user message from the request body
 
             # Make a single request to the OpenAI API using the user message
             chat_completion = client.chat.completions.create(
