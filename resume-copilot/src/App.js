@@ -30,19 +30,14 @@ function App() {
     // Overarching div for entire application
     <div className="App">
       {/* Have the sidebar div outside of everything so it can be opened from the side... might change later to underneath navbar */}
-      <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
+      <div
+        className={`content ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
+      >
         {/* The navbar */}
         <header className="App-header">
           <div>
             <nav className="App">
-              {/* <div className="toggle-button" onClick={toggleSidebar}>
-                P
-              </div> */}
-              <a
-                href="/"
-                className="logo"
-                onClick={() => setSidebarOpen(false)}
-              >
+              <a href="/" className="logo">
                 <img
                   src="..\public\favicon.ico"
                   alt="Resume Co-Pilot"
@@ -60,6 +55,9 @@ function App() {
             </nav>
           </div>
         </header>
+        <div className="toggle-button" onClick={toggleSidebar}>
+          P
+        </div>
         {/* The main class holding the actual chatbox elements */}
         <main className="App-main">
           {/* This is what opens the left bar... just click! */}
