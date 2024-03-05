@@ -27,18 +27,10 @@ function App() {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar open/close
   };
 
-// Adjusted Analysis function to provide a more "live" effect "dripping" the text to the user
-const handleAnalysisComplete = (newAnalysisResult) => {
-  setAnalysisResult(''); // Clear previous result
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i < newAnalysisResult.length) {
-      setAnalysisResult((prevResult) => prevResult + newAnalysisResult.charAt(i));
-      i++;
-    } else {
-      clearInterval(interval);
-    }
-  }, 10); // Adjust the dripping speed as needed
+// "live" text for some reason wont display very first word incorrectly for some reason
+// TODO: Fix "live" version and replace this static working version
+const handleAnalysisComplete = (analysisResult) => {
+  setAnalysisResult(analysisResult); // Display the result directly in the new text box
 };
 
   return (
