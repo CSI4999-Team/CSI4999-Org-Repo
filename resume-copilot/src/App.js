@@ -47,14 +47,12 @@ function App() {
   return (
     <div className="App">
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
-        <header className="App-header">
-          {/* Navbar content */}
-        </header>
+        <header className="App-header">{/* Navbar content */}</header>
+        <div className="toggle-button" onClick={toggleSidebar}>
+          P
+        </div>
         <main className="App-main">
           <LeftBar isOpen={sidebarOpen} />
-          <div className="toggle-button" onClick={toggleSidebar}>
-            Toggle Sidebar
-          </div>
           <h1>Resume Co-Pilot</h1>
           <input
             className="urlInput"

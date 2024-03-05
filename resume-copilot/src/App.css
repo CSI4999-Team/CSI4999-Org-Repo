@@ -209,3 +209,27 @@ button {
   font-size: 14px; /* Adjust font size to make the text smaller */
 }
 
+.sidebarContainer {
+  position: relative;
+  /* Ensure relative positioning */
+  /* z-index: 999;
+  cursor: pointer;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 0 5px 5px 0;
+  margin: -1px;
+  margin-right: 1000px; */
+}
+
+.toggle-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0 5px 5px 0;
+  padding: 10px;
+  cursor: pointer;
+  transition: right 10s ease;
+}
+
