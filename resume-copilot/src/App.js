@@ -30,8 +30,27 @@ function App() {
 // "live" text for some reason wont display very first word incorrectly for some reason
 // TODO: Fix "live" version and replace this static working version
 const handleAnalysisComplete = (analysisResult) => {
-  setAnalysisResult(analysisResult); // Display the result directly in the new text box
+  // instead of doing character by character lets display in chunks
+  const chunkSize = 5; // set chunk size
+  let currentIndex = 0; // initialize at zero so we dont lose any data
+
+  const interval = setInterval(() => {
+    if (currentIndex < analysisResult.length) {
+      // determine the next chunk's end index
+      const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
+      // get the next chunk of text
+      const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
+      // update the state with the new chunk appended
+      setAnalysisResult(prevResult => prevResult + nextChunk);
+      // update currentIndex to the end of the last chunk processed
+      currentIndex += chunkSize;
+    } else {
+      // once all chunks have been processed, clear the interval
+      clearInterval(interval);
+    }
+  }, 50); // Aajust the delay as needed, smaller number = "faster" feel to output
 };
+
 
   return (
     <div className="App">
