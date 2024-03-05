@@ -6,6 +6,7 @@ import "./App.css";
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
+  const [analysisResult, setAnalysisResult] = useState(""); // New state for analysis result
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleFileChange = (event) => {
@@ -26,9 +27,19 @@ function App() {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar open/close
   };
 
-  const handleAnalysisComplete = (analysisResult) => {
-    setJobDescription(prevDescription => prevDescription + "\n\nAnalysis:\n" + analysisResult);
-  };
+// Adjusted Analysis function to provide a more "live" effect "dripping" the text to the user
+const handleAnalysisComplete = (newAnalysisResult) => {
+  setAnalysisResult(''); // Clear previous result
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i < newAnalysisResult.length) {
+      setAnalysisResult((prevResult) => prevResult + newAnalysisResult.charAt(i));
+      i++;
+    } else {
+      clearInterval(interval);
+    }
+  }, 10); // Adjust the dripping speed as needed
+};
 
   return (
     <div className="App">
@@ -42,7 +53,6 @@ function App() {
             Toggle Sidebar
           </div>
           <h1>Resume Co-Pilot</h1>
-          {/* ...Radio button design... */}
           <input
             className="urlInput"
             type="text"
@@ -64,6 +74,15 @@ function App() {
             </button>
           </form>
           <UploadForm onAnalysisComplete={handleAnalysisComplete} />
+          {/* New text area for displaying the analysis result */}
+          {analysisResult && (
+            <textarea
+              className="analysis-result-textarea"
+              value={analysisResult}
+              readOnly
+              style={{ height: '600px' }} // Adjust the height as needed
+            />
+          )}
         </main>
       </div>
     </div>
