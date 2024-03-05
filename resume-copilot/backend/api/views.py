@@ -1,76 +1,80 @@
+import json
+from urllib import response
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import openai
 import os
-import fitz  # PyMuPDF
-from fpdf import FPDF
-
-# Set path otherwise error, but only locally?
-#import sys
-#sys.path.append("/Users/matthew/Desktop/CSI4999-Org-Repo/resume-copilot/backend")
-
-# Import Secret Functions from Vault
+import fitz  # PyMuPDF for PDF processing
 from utils.vault_util import *
 
-def my_view(request):
-    return HttpResponse("This is a test response.")
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
 
-# Function to get OpenAI API key from Vault
 def get_openai_api_key():
     hcp_api_token = get_hcp_api_token()
     secret_data = read_secret_from_vault(hcp_api_token)
-    return get_secrets(secret_data, "OPENAI_API_KEY")  # Replace with the actual secret name
+    return get_secrets(secret_data, "OPENAI_API_KEY")
 
 # Retrieve API key from environment variables
-openai.api_key = get_openai_api_key()
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
-# Hardcoded PDF file path
-pdf_path = r"PATH TO RESUME FOR GPT TO REVIEW"
+# TODO: Figure out why Vault version doesnt get stored AT ALL :(
+#openai.api_key = get_openai_api_key()
+
+@csrf_exempt
+def parse_pdf(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        pdf_file = request.FILES['file']
+
+        # Read PDF content
+        doc = fitz.open(stream=pdf_file.read(), filetype='pdf')
+        text = ""
+        for page in doc:
+            text += page.get_text()
+        doc.close()
+
+        # Return the extracted text as a response
+        # Store the extracted text in the session or another storage
+        request.session['resume_text'] = text  # Example using Django session
+        request.session.save()  # Explicitly save the session
+        
+        return JsonResponse({'extracted_text': text})
+    else:
+        return HttpResponse("Invalid request", status=400)
     
-# Read PDF content
-doc = fitz.open(pdf_path)
-text = "Evaluate the resume."
-for page in doc:
-    text += page.get_text()
-doc.close()
-    
-try:
-    # The updated API call as per the new interface
-    openai_response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",  # Use the model identifier suitable for your needs, "gpt-3.5-turbo" as an example
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": text}
-        ]
-    )
-    response_text = openai_response.choices[0].message.content if openai_response.choices else "No response"
-    class PDF(FPDF):
-        def header(self):
-            self.add_font('DejaVu', '', r'PATH TO TTF FILE - TEMP', uni=True)
-            self.set_font('DejaVu', '', 12)
-            self.cell(0, 10, 'GPT Response', 0, 1, 'C')
+# Initialize OpenAI client with the API key
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-        def footer(self):
-            self.set_y(-15)
-            self.set_font('DejaVu', '', 8)
-            self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
+@csrf_exempt
+def analyze_resume(request):
+    if request.method == 'POST':
+        try:
+            # Retrieve the resume text from the session or other storage
+            data = json.loads(request.body)  # Correctly load the JSON data sent from the frontend
+            resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
+            user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
 
-    # After getting the response
-    pdf = PDF()
-    pdf.add_page()
-    pdf.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf', uni=True)
-    pdf.set_font('DejaVu', '', 12)
-    pdf.multi_cell(0, 10, response_text)
 
-    pdf_output_path = r"PUT PATH TO HAVE PDF OUTPUT HERE"
-    pdf.output(pdf_output_path)
+            # Make a single request to the OpenAI API using the user message
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": "You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. Please provide some feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, just give general feedback."},
+                    {"role": "user", "content": resume_text},  # Resume text as context
+                    {"role": "user", "content": user_message}
+                ],
+                model="gpt-3.5-turbo",
+            )
 
-    print(f"PDF generated: {pdf_output_path}")
+            # Ensure the response is in text format
+            response_text = chat_completion.choices[0].message.content.strip()
 
-except openai.RateLimitError:
-    print("Rate limit exceeded. Please try again later.")
-except openai.OpenAIError as e:
-    print(f"An OpenAI API error occurred: {e}")
-except openai.OpenAIError as e:
-    print(f"An OpenAI API error occurred: {e}")
-
+            return JsonResponse({'response': response_text})
+        except openai.RateLimitError:
+            return JsonResponse({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
+        except openai.OpenAIError as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request'}, status=400)
