@@ -171,3 +171,20 @@ button {
   border-radius: 4px;
   width: 300px;
 }
+
+.analysisResultMarkdownContainer {
+  background-color: #fff; /* Background color similar to a textarea */
+  border: 1px solid #ccc; /* Border to mimic a textarea */
+  font-family: monospace; /* Monospace font to mimic typical textarea appearance */
+  padding: 10px; /* Padding inside the container for text */
+  height: 600px; /* Match the height of your previous textarea */
+  overflow-y: auto; /* Allow vertical scrolling */
+  width: 90%; /* Increase width to make the text box a bit wider */
+  max-width: 800px; /* Increase max width to prevent it from becoming too wide */
+  margin: 20px auto; /* Center it horizontally with some margin on the top and bottom */
+  box-shadow: 0 0 5px rgba(0,0,0,0.1); /* Optional: adds a subtle shadow for better visual separation */
+  border-radius: 4px; /* Optional: rounds the corners for a softer look */
+  color: #000; /* Set text color to black for readability */
+  font-size: 14px; /* Adjust font size to make the text smaller */
+}
+

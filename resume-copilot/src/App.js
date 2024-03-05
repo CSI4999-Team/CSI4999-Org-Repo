@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LeftBar from "./components/LeftBar";
 import UploadForm from './components/UploadForm';
+import ReactMarkdown from 'react-markdown';
 import "./App.css";
 
 function App() {
@@ -19,44 +20,35 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // TODO: Add logic to process the file and job description
     alert("Resume and job description submitted!");
   };
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen); // Toggle sidebar open/close
+    setSidebarOpen(!sidebarOpen);
   };
 
-// "live" text for some reason wont display very first word incorrectly for some reason
-// TODO: Fix "live" version and replace this static working version
-const handleAnalysisComplete = (analysisResult) => {
-  // instead of doing character by character lets display in chunks
-  const chunkSize = 5; // set chunk size
-  let currentIndex = 0; // initialize at zero so we dont lose any data
+  const handleAnalysisComplete = (analysisResult) => {
+    // Display in chunks
+    const chunkSize = 5;
+    let currentIndex = 0;
 
-  const interval = setInterval(() => {
-    if (currentIndex < analysisResult.length) {
-      // determine the next chunk's end index
-      const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
-      // get the next chunk of text
-      const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
-      // update the state with the new chunk appended
-      setAnalysisResult(prevResult => prevResult + nextChunk);
-      // update currentIndex to the end of the last chunk processed
-      currentIndex += chunkSize;
-    } else {
-      // once all chunks have been processed, clear the interval
-      clearInterval(interval);
-    }
-  }, 50); // Aajust the delay as needed, smaller number = "faster" feel to output
-};
-
+    const interval = setInterval(() => {
+      if (currentIndex < analysisResult.length) {
+        const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
+        const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
+        setAnalysisResult(prevResult => prevResult + nextChunk);
+        currentIndex += chunkSize;
+      } else {
+        clearInterval(interval);
+      }
+    }, 50);
+  };
 
   return (
     <div className="App">
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
         <header className="App-header">
-          {/* ...Navbar content... */}
+          {/* Navbar content */}
         </header>
         <main className="App-main">
           <LeftBar isOpen={sidebarOpen} />
@@ -85,14 +77,11 @@ const handleAnalysisComplete = (analysisResult) => {
             </button>
           </form>
           <UploadForm onAnalysisComplete={handleAnalysisComplete} />
-          {/* New text area for displaying the analysis result */}
+          {/* Display the analysis result with ReactMarkdown inside a styled div */}
           {analysisResult && (
-            <textarea
-              className="analysis-result-textarea"
-              value={analysisResult}
-              readOnly
-              style={{ height: '600px' }} // Adjust the height as needed
-            />
+            <div className="analysisResultMarkdownContainer">
+              <ReactMarkdown children={analysisResult} />
+            </div>
           )}
         </main>
       </div>
