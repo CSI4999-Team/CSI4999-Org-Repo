@@ -35,6 +35,9 @@ function App() {
         <header className="App-header">
           <div>
             <nav className="App">
+              {/* <div className="toggle-button" onClick={toggleSidebar}>
+                P
+              </div> */}
               <a
                 href="/"
                 className="logo"
@@ -60,9 +63,12 @@ function App() {
         {/* The main class holding the actual chatbox elements */}
         <main className="App-main">
           {/* This is what opens the left bar... just click! */}
-          <LeftBar isOpen={sidebarOpen} /> {/* Pass isOpen prop to LeftBar */}
-          <div className="toggle-button" onClick={toggleSidebar}>
-            Toggle Sidebar
+          <div className="sidebarContainer">
+            <LeftBar isOpen={sidebarOpen}></LeftBar>{" "}
+            {/* Pass isOpen prop to LeftBar */}
+            <div className="toggle-button" onClick={toggleSidebar}>
+              P
+            </div>
           </div>
           <h1>Resume Co-Pilot</h1>
           {/* Radio button design, here until replaced */}
@@ -116,7 +122,7 @@ function App() {
               ></input>
             </label>
           </div> */}
-          <Uploader/>
+          <Uploader />
           <form onSubmit={handleSubmit}>
             {/* <input
               className="input-button"
