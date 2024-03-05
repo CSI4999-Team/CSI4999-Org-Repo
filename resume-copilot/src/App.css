@@ -1,3 +1,8 @@
+/* Colors
+main blue: #1DB8D4
+dark black: #191213
+light black: #282c34 */
+
 .App {
   background-color: #070709;
 }
@@ -50,7 +55,7 @@ button {
   width: auto;
   height: 6rem;
   /* Set your desired height */
-  background-color: #7fbf7f;
+  background-color: #1DB8D4;
   /* Adjust opacity as needed */
   /* border-radius: 1rem; */
   /* Adjust border-radius as needed */
@@ -103,7 +108,7 @@ button {
   padding: 10px 70px;
   cursor: pointer;
   font-weight: bold;
-  background-color: #7fbf7f;
+  background-color: #1DB8D4;
   color: #191213;
   border: 0ch;
   /* color: white; */
@@ -170,7 +175,7 @@ button {
   padding: 8px 14px;
   font-size: 20px;
   color: #ffffff;
-  background: #7fbf7f;
+  background: #1DB8D4;
   cursor: pointer;
   transition: background 0.1s;
 }
