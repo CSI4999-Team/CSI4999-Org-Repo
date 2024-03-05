@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 =======
 # Resume Co-Pilot
 
@@ -21,6 +20,8 @@ What things you need to install the software and how to install them:
 * This will run the frontend on http://localhost:3000:
 
  ```npm install``` 
+
+ ```npm install react-markdown```
 
  ```npm start```
 
