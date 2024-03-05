@@ -1,0 +1,35 @@
+#drop-area {
+    width: 800px;
+    height: 300px;
+    padding: 30px;
+    background: none;
+    text-align: center;
+    border-radius: 20px;
+}
+
+#img-view {
+    width: 800px;
+    height: 300px;
+    border-radius: 20px;
+    border: 2px solid black;
+    background: #191213;
+    background-position: center;
+    background-size: cover;
+    opacity: 10;
+}
+
+#img-view img {
+    width: 100px;
+    margin-top: 25px;
+}
+
+#img-view span {
+    display: block;
+    font-size: 12px;
+    color: #777;
+    margin-top: 15px;
+}
+
+.fileUploaded {
+    opacity: 0;
+}

@@ -47,14 +47,11 @@ function App() {
   return (
     <div className="App">
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
-        <header className="App-header">
-          {/* Navbar content */}
-        </header>
+        <header className="App-header">{/* Navbar content */}</header>
+        <div className="toggle-button" onClick={toggleSidebar}>
+        </div>
         <main className="App-main">
           <LeftBar isOpen={sidebarOpen} />
-          <div className="toggle-button" onClick={toggleSidebar}>
-            Toggle Sidebar
-          </div>
           <h1>Resume Co-Pilot</h1>
           <input
             className="urlInput"
@@ -62,11 +59,11 @@ function App() {
             placeholder="Enter URL here"
           />
           <form onSubmit={handleSubmit}>
-            <input
+            {/* <input
               className="input-button"
               type="file"
               onChange={handleFileChange}
-            />
+            /> */}
             <textarea
               placeholder="Paste job description here"
               value={jobDescription}
