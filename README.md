@@ -1,4 +1,3 @@
-=======
 # Resume Co-Pilot
 
 **Resume Co-Pilot** is an AI-driven tool designed to empower job seekers by enhancing their resume writing process. Utilizing advanced Generative AI, this project aims to address the challenges of navigating through automated Applicant Tracking Systems (ATS) and optimizing resumes for specific job applications.
