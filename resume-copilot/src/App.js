@@ -3,12 +3,16 @@ import LeftBar from "./components/LeftBar";
 import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
 import "./App.css";
+import Login from './components/Login';
+
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
-  const [analysisResult, setAnalysisResult] = useState(""); // New state for analysis result
+  const [analysisResult, setAnalysisResult] = useState(""); // state for analysis result
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to manage login status
+
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -43,6 +47,11 @@ function App() {
       }
     }, 50);
   };
+  
+// check login
+  if (!isLoggedIn) {
+    return <Login onLoginSuccess={() => setIsLoggedIn(true)} />;
+  }
 
   return (
     <div className="App">

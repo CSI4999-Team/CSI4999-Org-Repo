@@ -22,6 +22,8 @@ What things you need to install the software and how to install them:
 
  ```npm install react-markdown```
 
+ ```npm install @auth0/auth0-react```
+
  ```npm start```
 
 * To activate the Django backend, which will run on http://127.0.0.1:8000:
