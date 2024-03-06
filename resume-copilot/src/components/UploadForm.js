@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./UploadForm.css";
 
 function UploadForm({ onAnalysisComplete }) {
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
+  // input reference for resume upload and being able to click anywhere in upload box
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -69,6 +71,11 @@ function UploadForm({ onAnalysisComplete }) {
     event.stopPropagation();
   };
 
+  // Add a function so user can click anywhere in the file input
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <div className="upload-form-container">
       <form
@@ -82,6 +89,7 @@ function UploadForm({ onAnalysisComplete }) {
             data={fileURL}
             width="100%"
             height="500"
+            aria-label="Uploaded PDF preview"
           >
             PDF Viewer not available. You can download the file{" "}
             <a href={fileURL} download>
@@ -89,16 +97,15 @@ function UploadForm({ onAnalysisComplete }) {
             </a>
           </object>
         ) : (
-          <div className="drop-area">
-            <label htmlFor="fileInput" className="fileInputLabel">
-              Drag and drop your PDF file here or click to select
-            </label>
+          <div className="drop-area" onClick={triggerFileInput}>
+            <p>Drag and drop your PDF file here or click to select</p>
             <input
+              ref={fileInputRef}
               type="file"
               id="fileInput"
               onChange={handleFileChange}
               accept=".pdf"
-              className="fileInput"
+              style={{ display: "none" }} // Keep the input hidden
             />
           </div>
         )}
