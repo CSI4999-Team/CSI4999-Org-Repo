@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import LeftBar from "./components/LeftBar";
 import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
+import LogoutButton from './components/Logout';
 import "./App.css";
 
 function App() {
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0(); // These are from useAuth0
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
-  const [analysisResult, setAnalysisResult] = useState(""); // New state for analysis result
+  const [analysisResult, setAnalysisResult] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -43,13 +47,27 @@ function App() {
       }
     }, 50);
   };
+  
+// throw Auth0 login page
+React.useEffect(() => {
+  if (!isLoading && !isAuthenticated) {
+    loginWithRedirect();
+  }
+}, [isLoading, isAuthenticated, loginWithRedirect]);
 
-  return (
-    <div className="App">
+// Show loading state while Auth0 is loading
+if (isLoading) return <div>Loading...</div>;
+
+
+return (
+  <div className="App">
+    {isAuthenticated ? (
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
-        <header className="App-header">{/* Navbar content */}</header>
-        <div className="toggle-button" onClick={toggleSidebar}>
-        </div>
+        <header className="App-header">
+          {/* Other navbar content */}
+          {isAuthenticated && <div className="logout-button-container"><LogoutButton /></div>}
+        </header>
+        <div className="toggle-button" onClick={toggleSidebar}></div>
         <main className="App-main">
           <LeftBar isOpen={sidebarOpen} />
           <h1>Resume Co-Pilot</h1>
@@ -59,11 +77,6 @@ function App() {
             placeholder="Enter URL here"
           />
           <form onSubmit={handleSubmit}>
-            {/* <input
-              className="input-button"
-              type="file"
-              onChange={handleFileChange}
-            /> */}
             <textarea
               placeholder="Paste job description here"
               value={jobDescription}
@@ -74,16 +87,18 @@ function App() {
             </button>
           </form>
           <UploadForm onAnalysisComplete={handleAnalysisComplete} />
-          {/* Display the analysis result with ReactMarkdown inside a styled div */}
           {analysisResult && (
             <div className="analysisResultMarkdownContainer">
-              <ReactMarkdown children={analysisResult} />
+              <ReactMarkdown>{analysisResult}</ReactMarkdown>
             </div>
           )}
         </main>
       </div>
-    </div>
-  );
+    ) : (
+      <div>Redirecting to login...</div>
+    )}
+  </div>
+);
 }
 
 export default App;

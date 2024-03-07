@@ -253,3 +253,12 @@ button {
   opacity: .1;
   padding: 10px;
 }
+
+/* Logout button: */
+.logout-button-container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 20px; /* Adjust as needed */
+  margin-top: 20px; /* Adjust as needed */
+}
