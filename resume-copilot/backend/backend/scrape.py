@@ -7,10 +7,8 @@ from urllib.parse import urlparse
 import json
 
 chrome_options = Options()
-#chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(options=chrome_options)
-
-driver.get(url)
 
 def signal_handler(sig, frame):
     driver.quit()
@@ -23,7 +21,7 @@ def get_domain_name(url):
         domain = domain[4:]  # Remove 'www.' prefix if present
     return domain
 
-def scrapeWebsite(url):
+def scrapeWebsiteCategories(url):
 
     supportedSites = { 
         "indeed.com": {
@@ -66,4 +64,8 @@ def scrapeWebsite(url):
 
     return data
 
-#jsonString = json.dumps(scrapeWebsite(url))
+def scrapeWebsite(url):
+    driver.get(url)
+    return driver.find_element(By.CSS_SELECTOR, "body").text
+
+print(json.dumps(scrapeWebsite("https://scrapfly.io/blog/how-to-scrape-indeedcom/")))
