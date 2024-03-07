@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LeftBar from "./components/LeftBar"; // Importing the LeftBar component
 import "./App.css";
+import tipsandtricks from "../src/screens/tipsandtricks";
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -51,6 +52,9 @@ function App() {
                 </a>
                 <a href="#faq" className="nav-link">
                   FAQ
+                </a>
+                <a href="../screens/tipsandtricks" className="nav-link">
+                  T.N.T
                 </a>
               </div>
             </nav>
