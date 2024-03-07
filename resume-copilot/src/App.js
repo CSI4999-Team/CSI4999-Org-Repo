@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import LeftBar from "./components/LeftBar";
 import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
+import LogoutButton from './components/Logout';
 import "./App.css";
 
 function App() {
@@ -63,7 +64,8 @@ return (
     {isAuthenticated ? (
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
         <header className="App-header">
-          {/* Navbar content */}
+          {/* Other navbar content */}
+          {isAuthenticated && <LogoutButton />}
         </header>
         <div className="toggle-button" onClick={toggleSidebar}></div>
         <main className="App-main">

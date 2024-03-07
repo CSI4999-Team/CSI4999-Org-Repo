@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// TODO: REMOVE HARDCODED VALUES, USE .env FILE!
 // Replace these values with your Auth0 domain and client ID
 const auth0Domain = 'dev-6gb5dj5y00rbgay1.us.auth0.com';
 const auth0ClientId = 'iH9BUfGKNVerNf9UvmBDKoRmb51D6bXo';
