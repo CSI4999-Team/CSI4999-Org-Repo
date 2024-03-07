@@ -65,7 +65,7 @@ return (
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
         <header className="App-header">
           {/* Other navbar content */}
-          {isAuthenticated && <LogoutButton />}
+          {isAuthenticated && <div className="logout-button-container"><LogoutButton /></div>}
         </header>
         <div className="toggle-button" onClick={toggleSidebar}></div>
         <main className="App-main">
