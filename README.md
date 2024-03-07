@@ -20,8 +20,8 @@ What things you need to install the software and how to install them:
  **We need to create a .env file to store secrets for Auth0 to pull!**
  ***TODO: This should be taken care of in the future with Vault Agent***
  * Inside the src folder, create a .env file, inside it copy paste:
- ```REACT_APP_AUTH0_DOMAIN=INSERT_SECRET_HERE```
- ```REACT_APP_AUTH0_CLIENT_ID=INSERT_SECRET_HERE```
+ ```REACT_APP_AUTH0_DOMAIN = "INSERT_SECRET_HERE"```
+ ```REACT_APP_AUTH0_CLIENT_ID = "INSERT_SECRET_HERE"```
 
 * This will run the frontend on http://localhost:3000:
 
