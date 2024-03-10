@@ -4,6 +4,7 @@ import LeftBar from "./components/LeftBar";
 import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import "./App.css";
 
 function App() {
@@ -75,40 +76,43 @@ return (
     {isAuthenticated ? (
       <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
         <header className="App-header">
-          {/* Other navbar content */}
-          {isAuthenticated && <div className="logout-button-container"><LogoutButton /></div>}
+          <LogoutButton />
         </header>
         <div className="toggle-button" onClick={toggleSidebar}></div>
         <main className="App-main">
           <LeftBar isOpen={sidebarOpen} />
           <h1>Resume Co-Pilot</h1>
-          {currentStep === 1 && (
-            <div>
-              <input
-                className="urlInput"
-                type="text"
-                placeholder="Enter URL here"
-              />
-              <form onSubmit={handleSubmit}>
-                <textarea
-                  placeholder="Paste job description here"
-                  value={jobDescription}
-                  onChange={handleDescriptionChange}
-                />
-                <button type="submit" className="submit-button">
-                  Submit
-                </button>
-            </form>
-          </div>
-          )}
-          {currentStep === 2 && !isUploading && (
-          <UploadForm onAnalysisComplete={handleAnalysisComplete} />
-          )}
-          {currentStep === 3 && analysisResult && (
-            <div className="analysisResultMarkdownContainer">
-              <ReactMarkdown>{analysisResult}</ReactMarkdown>
-            </div>
-          )}
+          <TransitionGroup component={null}>
+            {currentStep === 1 && (
+              <CSSTransition key={currentStep} timeout={300} classNames="fade">
+                <div>
+                  <input className="urlInput" type="text" placeholder="Enter URL here" />
+                  <form onSubmit={handleSubmit}>
+                    <textarea placeholder="Paste job description here" value={jobDescription} onChange={handleDescriptionChange} />
+                    <button type="submit" className="submit-button">Submit</button>
+                  </form>
+                </div>
+              </CSSTransition>
+            )}
+            {currentStep === 2 && (
+              <CSSTransition key="uploadForm" timeout={300} classNames="fade">
+                <div>
+                  {!isUploading ? (
+                    <UploadForm onAnalysisComplete={handleAnalysisComplete} />
+                  ) : (
+                    <div>Loading...</div> // Smoothly transitions to loading screen after file upload
+                  )}
+                </div>
+              </CSSTransition>
+            )}
+            {currentStep === 3 && analysisResult && (
+              <CSSTransition key={currentStep} timeout={300} classNames="fade">
+                <div className="analysisResultMarkdownContainer">
+                  <ReactMarkdown>{analysisResult}</ReactMarkdown>
+                </div>
+              </CSSTransition>
+            )}
+          </TransitionGroup>
         </main>
       </div>
     ) : (
