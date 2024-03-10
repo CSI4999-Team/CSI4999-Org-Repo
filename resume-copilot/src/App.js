@@ -12,6 +12,9 @@ function App() {
   const [jobDescription, setJobDescription] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1); // step by step user screens, start at 1 (login?)
+  // State to manage loading screen display
+  const [isUploading, setIsUploading] = useState(false);
 
 
   const handleFileChange = (event) => {
@@ -25,6 +28,7 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
     alert("Resume and job description submitted!");
+    setCurrentStep(2); // Move to the upload step
   };
 
   const toggleSidebar = () => {
@@ -32,20 +36,27 @@ function App() {
   };
 
   const handleAnalysisComplete = (analysisResult) => {
-    // Display in chunks
-    const chunkSize = 5;
-    let currentIndex = 0;
+    // Trigger the loading screen immediately after file submission
+    setIsUploading(true); 
+    // Simulate a loading process duration
+    setTimeout(() => {
+      setIsUploading(false); // End loading screen and prepare to display results
+      setCurrentStep(3); // Ensure we transition to the result display step
 
-    const interval = setInterval(() => {
-      if (currentIndex < analysisResult.length) {
-        const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
-        const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
-        setAnalysisResult(prevResult => prevResult + nextChunk);
-        currentIndex += chunkSize;
-      } else {
-        clearInterval(interval);
-      }
-    }, 50);
+      // Initialize the "dripping" effect for displaying the analysis results
+      const chunkSize = 5;
+      let currentIndex = 0;
+      const interval = setInterval(() => {
+        if (currentIndex < analysisResult.length) {
+          const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
+          const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
+          setAnalysisResult(prevResult => prevResult + nextChunk);
+          currentIndex += chunkSize;
+        } else {
+          clearInterval(interval);
+        }
+      }, 50);
+    }, 3000); // Adjusted to a 3-second delay to match your scenario
   };
   
 // throw Auth0 login page
@@ -71,23 +82,29 @@ return (
         <main className="App-main">
           <LeftBar isOpen={sidebarOpen} />
           <h1>Resume Co-Pilot</h1>
-          <input
-            className="urlInput"
-            type="text"
-            placeholder="Enter URL here"
-          />
-          <form onSubmit={handleSubmit}>
-            <textarea
-              placeholder="Paste job description here"
-              value={jobDescription}
-              onChange={handleDescriptionChange}
-            />
-            <button type="submit" className="submit-button">
-              Submit
-            </button>
-          </form>
+          {currentStep === 1 && (
+            <div>
+              <input
+                className="urlInput"
+                type="text"
+                placeholder="Enter URL here"
+              />
+              <form onSubmit={handleSubmit}>
+                <textarea
+                  placeholder="Paste job description here"
+                  value={jobDescription}
+                  onChange={handleDescriptionChange}
+                />
+                <button type="submit" className="submit-button">
+                  Submit
+                </button>
+            </form>
+          </div>
+          )}
+          {currentStep === 2 && !isUploading && (
           <UploadForm onAnalysisComplete={handleAnalysisComplete} />
-          {analysisResult && (
+          )}
+          {currentStep === 3 && analysisResult && (
             <div className="analysisResultMarkdownContainer">
               <ReactMarkdown>{analysisResult}</ReactMarkdown>
             </div>
