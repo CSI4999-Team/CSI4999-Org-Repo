@@ -9,6 +9,7 @@ import "./App.css";
 
 function App() {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -17,6 +18,10 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   /* Functions */
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
 
   const handleDescriptionChange = (event) => {
     setJobDescription(event.target.value);
