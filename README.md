@@ -29,6 +29,8 @@ What things you need to install the software and how to install them:
 
  ```npm install react-markdown```
 
+ ```npm install react-transition-group```
+
  ```npm install @auth0/auth0-react```
 
  ```npm start```
