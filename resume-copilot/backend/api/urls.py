@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import process_pdf
+from .views import parse_pdf
+from .views import analyze_resume
 from . import views
 
 urlpatterns = [
-    path('process_pdf/', process_pdf, name='process_pdf'),
-    # testing view
-    path('test/', views.my_view, name='test_view'),
+    path('parse_pdf/', parse_pdf, name='parse_pdf'),
+    path('analyze_resume/', views.analyze_resume, name='analyze_resume'),
 ]

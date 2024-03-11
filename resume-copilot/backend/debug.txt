@@ -1,0 +1,10 @@
+ERROR 2024-02-23 18:21:51,147 log 42601 6136590336 Internal Server Error: /api/process_pdf/
+ERROR 2024-02-23 18:21:51,148 basehttp 42601 6136590336 "POST /api/process_pdf/ HTTP/1.1" 500 144
+DEBUG 2024-02-23 18:21:51,497 autoreload 42601 8019283968 File /Users/matthew/Desktop/CSI4999-Org-Repo/CSI4999-Org-Repo/resume-copilot/venv/lib/python3.10/site-packages/django/contrib/messages/storage/session.py first seen with mtime 1708706192.9264803
+DEBUG 2024-02-23 18:21:51,497 autoreload 42601 8019283968 File /Users/matthew/Desktop/CSI4999-Org-Repo/CSI4999-Org-Repo/resume-copilot/venv/lib/python3.10/site-packages/django/contrib/messages/storage/fallback.py first seen with mtime 1708706192.926286
+DEBUG 2024-02-23 18:21:51,498 autoreload 42601 8019283968 File /Users/matthew/Desktop/CSI4999-Org-Repo/CSI4999-Org-Repo/resume-copilot/venv/lib/python3.10/site-packages/django/contrib/sessions/serializers.py first seen with mtime 1708706193.0214596
+DEBUG 2024-02-23 18:21:51,499 autoreload 42601 8019283968 File /Users/matthew/.pyenv/versions/3.10.11/lib/python3.10/encodings/raw_unicode_escape.py first seen with mtime 1683672947.2922173
+DEBUG 2024-02-23 18:21:51,500 autoreload 42601 8019283968 File /Users/matthew/Desktop/CSI4999-Org-Repo/CSI4999-Org-Repo/resume-copilot/venv/lib/python3.10/site-packages/django/contrib/messages/storage/cookie.py first seen with mtime 1708706192.9261026
+DEBUG 2024-02-23 18:24:00,225 autoreload 42601 8019283968 File /Users/matthew/Desktop/CSI4999-Org-Repo/CSI4999-Org-Repo/resume-copilot/backend/backend/settings.py previous mtime: 1708712448.4011104, current mtime: 1708712639.7510302
+DEBUG 2024-02-23 18:24:00,225 autoreload 42601 8019283968 /Users/matthew/Desktop/CSI4999-Org-Repo/CSI4999-Org-Repo/resume-copilot/backend/backend/settings.py notified as changed. Signal results: [(<function template_changed at 0x10575e3b0>, None), (<function translation_file_changed at 0x1060bb370>, None)].
+INFO 2024-02-23 18:24:00,225 autoreload 42601 8019283968 /Users/matthew/Desktop/CSI4999-Org-Repo/CSI4999-Org-Repo/resume-copilot/backend/backend/settings.py changed, reloading.

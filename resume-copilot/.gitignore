@@ -3,6 +3,9 @@
 # This is the overall .gitignore file, add OS and software specific things we want to ignore on an overall level here:
 /venv
 
+# universal block on .env files
+.env
+
 # dependencies
 /node_modules
 /.pnp
