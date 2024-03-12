@@ -140,3 +140,4 @@ CORS_ALLOWED_ORIGINS = [
 
 # Bugfix for Deployment
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
