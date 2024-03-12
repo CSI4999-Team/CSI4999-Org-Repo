@@ -31,6 +31,11 @@ const LeftBar = ({ isOpen }) => {
       chatSuggestions: ["Chat suggestion 5", "Chat suggestion 6"],
     },
   ];
+  const tipsandtricks = [
+    <p>Always build your experience in reverse chronological order</p>
+    
+    
+  ]
 
   return (
     <motion.div
@@ -45,6 +50,10 @@ const LeftBar = ({ isOpen }) => {
             <button>{resume.title}</button>
           </li>
         ))}
+      </ul>
+      <h3 className="tip">Pro tip</h3>
+      <ul className = "tnt">
+        {tipsandtricks}
       </ul>
       {/* <div
         className="toggle-button"

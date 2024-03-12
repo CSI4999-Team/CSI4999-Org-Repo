@@ -17,3 +17,19 @@ h2 {
     justify-content: center;
     /* Horizontally center */
 }
+
+.tip{
+    color: #A8A8A8;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    display: flex;
+    justify-content: center;
+}
+.tnt {
+    font-size: 15px;
+    justify-content: center;
+
+}
