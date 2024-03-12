@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-atp+_5%lla5jxk=3d2@#836vfe6f!&)m2dd(xgi0-hq2_y@=v0'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default-secret-key')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False # keep false in production
 
-ALLOWED_HOSTS = ['*']
+# change to ['*'] if you are doing local testing to allow all connection hosts
+ALLOWED_HOSTS = ['resumecopilot.us', 'www.resumecopilot.us', 'resume-copilot-app-l4o8t.ondigitalocean.app']
 
 
 # Application definition
@@ -127,9 +129,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# TODO: Restrict this in production later, this allows middleware requests from ANYWHERE for testing
-# TODO: REMOVE LATER THIS IS FOR TESTING
-CORS_ALLOW_ALL_ORIGINS = True
+# Keep Restricted in Production, this allows middleware requests from only specific hosts
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "https://resumecopilot.us",
+    "https://www.resumecopilot.us",
+    "https://resume-copilot-app-l4o8t.ondigitalocean.app",
+    "http://localhost:3000",  # if you want to allow local development
+]
 
 # Bugfix for Deployment
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
