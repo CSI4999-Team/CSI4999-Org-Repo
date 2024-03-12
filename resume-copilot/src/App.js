@@ -5,7 +5,7 @@ import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
 import "./App.css";
-import tipsandtricks from "../src/screens/tipsandtricks";
+
 
 function App() {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0(); // These are from useAuth0
