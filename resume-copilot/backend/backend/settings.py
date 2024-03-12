@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-atp+_5%lla5jxk=3d2@#836vfe6f!&)m2dd(xgi0-hq2_y@=v0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['resumecopilot.us', 'www.resumecopilot.us', 'resume-copilot-app-l4o8t.ondigitalocean.app']
+ALLOWED_HOSTS = ['resumecopilot.us', 'www.resumecopilot.us', 'resume-copilot-app-l4o8t.ondigitalocean.app', '104.131.187.171', 'api.resumecopilot.us']
 
 
 # Application definition
@@ -127,9 +127,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# TODO: Restrict this in production later, this allows middleware requests from ANYWHERE for testing
-# TODO: REMOVE LATER THIS IS FOR TESTING
-CORS_ALLOW_ALL_ORIGINS = True
+# Keep restricted  in production, this allows middleware requests from specific origins
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Allow local development
+    "https://resumecopilot.us",
+    "https://www.resumecopilot.us",
+    "https://resume-copilot-app-l4o8t.ondigitalocean.app",  # Your React app's domain
+]
 
 # Bugfix for Deployment
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
