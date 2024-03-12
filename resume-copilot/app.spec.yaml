@@ -1,0 +1,16 @@
+name: django-app
+services:
+- name: backend
+  github:
+    repo: yourusername/yourrepo
+    branch: main
+  build_command: |
+    # Change to the Django app directory
+    cd resume-copilot/backend
+    # Install dependencies
+    pip install -r requirements.txt
+    # Collect static files
+    python manage.py collectstatic --noinput
+  run_command: |
+    cd resume-copilot/backend
+    gunicorn backend.wsgi:application --bind 0.0.0.1:$PORT
