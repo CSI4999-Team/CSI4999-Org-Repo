@@ -11,6 +11,9 @@ from utils.vault_util import *
 from dotenv import load_dotenv
 load_dotenv()
 
+def health_check(request):
+    return HttpResponse("OK")
+
 def get_openai_api_key():
     hcp_api_token = get_hcp_api_token()
     secret_data = read_secret_from_vault(hcp_api_token)

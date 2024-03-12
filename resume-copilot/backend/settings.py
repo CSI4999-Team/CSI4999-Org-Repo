@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default-secret-key')
 DEBUG = False # keep false in production
 
 # change to ['*'] if you are doing local testing to allow all connection hosts
-ALLOWED_HOSTS = ['resumecopilot.us', 'www.resumecopilot.us', 'resume-copilot-app-l4o8t.ondigitalocean.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
