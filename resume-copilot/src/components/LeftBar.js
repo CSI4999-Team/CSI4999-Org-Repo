@@ -32,10 +32,17 @@ const LeftBar = ({ isOpen }) => {
     },
   ];
   const tipsandtricks = [
-    <p>Always build your experience in reverse chronological order</p>
-    
-    
-  ]
+    {
+      tip1: "Always build your experience in reverse chronological order"
+    },
+    {
+      tip2: "95% of hiring teams prefer one to two pages max"
+    },
+    {
+      tip3: "Avoid overly technical words, a highschool senior should be able to understand your resume"
+    }
+     
+  ];
 
   return (
     <motion.div
@@ -51,9 +58,17 @@ const LeftBar = ({ isOpen }) => {
           </li>
         ))}
       </ul>
-      <h3 className="tip">Pro tip</h3>
+      <h3 className="tiplabel">Pro tip</h3>
       <ul className = "tnt">
-        {tipsandtricks}
+        {tipsandtricks.map(item => (
+          <li key={item.id}>
+            <div className="tip">{item.tip1}</div>
+            <div className="tip">{item.tip2}</div>
+            <div className="tip">{item.tip3}</div>
+          </li>
+
+        )
+        )} 
       </ul>
       {/* <div
         className="toggle-button"

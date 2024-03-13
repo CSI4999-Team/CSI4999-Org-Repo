@@ -18,7 +18,7 @@ h2 {
     /* Horizontally center */
 }
 
-.tip{
+.tiplabel{
     color: #A8A8A8;
     font-size: 24px;
     margin-bottom: 10px;
@@ -32,4 +32,7 @@ h3 {
     font-size: 15px;
     justify-content: center;
 
+}
+.tip {
+    margin-bottom: 10px;
 }
