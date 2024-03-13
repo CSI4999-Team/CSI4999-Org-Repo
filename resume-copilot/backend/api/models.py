@@ -10,3 +10,6 @@ class User(models.Model):
 
     def check_password(self, password):
         return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
+
+    def get_display_name(self):
+        return self.username.capitalize()
