@@ -7,3 +7,6 @@ class User(models.Model):
 
     def set_password(self, password):
         self.password_hash = hashlib.sha256(password.encode()).hexdigest()
+
+    def check_password(self, password):
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
