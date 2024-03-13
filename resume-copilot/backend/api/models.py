@@ -1,5 +1,3 @@
-from django.db import models
-
 import hashlib
 from django.db import models
 
