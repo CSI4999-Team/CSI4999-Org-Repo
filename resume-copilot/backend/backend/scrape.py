@@ -65,7 +65,7 @@ def scrapeWebsiteCategories(url):
 
     return data
 
-def scrape_Website(url):
+def scrape_website(url):
     driver.get(url)
     return driver.find_element(By.CSS_SELECTOR, "body").text
 

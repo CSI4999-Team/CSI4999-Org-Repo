@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),  # OpenAI API path
-    path('parse_pdf/', scrapeWebsite, name='scrape'),
+    path('parse_resume/', readResume),
+    path('scrape/', scrapeWebsite),
 ]
