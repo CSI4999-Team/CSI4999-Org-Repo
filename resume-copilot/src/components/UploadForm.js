@@ -42,16 +42,6 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
       const parseData = await parseResponse.json();
       const resumeText = parseData.extracted_text;
 
-      // Step 2: Analyze the extracted resume text
-      const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ resume_text: resumeText }),
-      });
-      const analyzeData = await analyzeResponse.json();
-
       // Call the callback with the analysis result
       onAnalysisComplete(analyzeData.response);
     } catch (error) {
