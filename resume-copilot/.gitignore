@@ -3,6 +3,10 @@
 # This is the overall .gitignore file, add OS and software specific things we want to ignore on an overall level here:
 /venv
 
+<<<<<<< HEAD
+=======
+# universal block on .env files
+>>>>>>> main
 .env
 
 # dependencies

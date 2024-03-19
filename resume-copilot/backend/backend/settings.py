@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-atp+_5%lla5jxk=3d2@#836vfe6f!&)m2dd(xgi0-hq2_y@=v0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -129,3 +130,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # TODO: Restrict this in production later, this allows middleware requests from ANYWHERE for testing
 # TODO: REMOVE LATER THIS IS FOR TESTING
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Bugfix for Deployment
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

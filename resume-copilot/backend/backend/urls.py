@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', include('api.urls')),  # Replace 'your_app_name' with the actual name of your app
+    path('api/', include('api.urls')),  # OpenAI API path
 ]
