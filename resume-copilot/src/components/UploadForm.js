@@ -35,7 +35,7 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
 
     try {
       // Step 1: Extract resume text from the uploaded PDF file
-      const parseResponse = await fetch("http://localhost:8000/api/parse_pdf/", {
+      const parseResponse = await fetch("https://api.resumecopilot.us/api/parse_pdf/", {
         method: "POST",
         body: formData,
       });
@@ -43,7 +43,7 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
       const resumeText = parseData.extracted_text;
 
       // Step 2: Analyze the extracted resume text
-      const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", {
+      const analyzeResponse = await fetch("https://api.resumecopilot.us/api/analyze_resume/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
