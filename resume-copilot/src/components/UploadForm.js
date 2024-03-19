@@ -35,12 +35,23 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
 
     try {
       // Step 1: Extract resume text from the uploaded PDF file
-      const parseResponse = await fetch("http://localhost:8000/api/parse_pdf/", {
+      const parseResume= await fetch("http://localhost:8000/api/parse_pdf/", {
         method: "POST",
         body: formData,
       });
-      const parseData = await parseResponse.json();
+      const parseData = await parseResume.json();
       const resumeText = parseData.extracted_text;
+
+      // need to have this variable be the URL that the user inputs
+      const url = null;
+
+      // Step 2: Send URL to job posting to backend and recieve the content
+      const parseJobPosting= await fetch("http://localhost:8000/api/scrape/", {
+        method: "POST",
+        body: url,
+      });
+      const parseData = await parseJobPosting.json();
+      const jobPostingText= parseData.extracted_text;
 
       // Call the callback with the analysis result
       onAnalysisComplete(analyzeData.response);
