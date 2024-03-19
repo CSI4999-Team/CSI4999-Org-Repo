@@ -35,7 +35,7 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
 
     try {
       // Step 1: Extract resume text from the uploaded PDF file
-      const parseResume= await fetch("http://localhost:8000/api/parse_pdf/", {
+      const parseResume= await fetch("http://localhost:8000/api/parse_resume/", {
         method: "POST",
         body: formData,
       });
