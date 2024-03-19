@@ -5,6 +5,7 @@ from time import sleep
 import time
 from urllib.parse import urlparse
 import json
+from django.http import JsonResponse
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
@@ -64,8 +65,20 @@ def scrapeWebsiteCategories(url):
 
     return data
 
-def scrapeWebsite(url):
+def scrape_Website(url):
     driver.get(url)
     return driver.find_element(By.CSS_SELECTOR, "body").text
 
-print(json.dumps(scrapeWebsite("https://scrapfly.io/blog/how-to-scrape-indeedcom/")))
+def scrapeWebsite(request):
+    if request.method == 'POST':
+        url = request.POST.get('url')
+        
+        try:
+            extracted_text = scrape_website(url)
+            return JsonResponse({'extracted_text': extracted_text})
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    else:
+        return JsonResponse({'error': 'POST method required'}, status=400)
