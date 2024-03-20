@@ -34,23 +34,23 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
     formData.append("file", file);
 
     try {
+      const tmpData = null;
       // Step 1: Extract resume text from the uploaded PDF file
-      const parseResponse = await fetch("http://localhost:8000/api/parse_pdf/", {
+      const parseResume= await fetch("http://localhost:8000/resume/", {
         method: "POST",
-        body: formData,
+        body: tmpData,
       });
-      const parseData = await parseResponse.json();
+      const parseData = await parseResume.json();
       const resumeText = parseData.extracted_text;
 
-      // Step 2: Analyze the extracted resume text
-      const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", {
+      // need to have this variable be the URL that the user inputs
+      const url = null;
+
+      // Step 2: Send URL to job posting to backend and recieve the content
+      const parseJobPosting= await fetch("http://localhost:8000/scrape/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ resume_text: resumeText }),
+        body: url,
       });
-      const analyzeData = await analyzeResponse.json();
 
       // Call the callback with the analysis result
       onAnalysisComplete(analyzeData.response);
