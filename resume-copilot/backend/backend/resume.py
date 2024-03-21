@@ -1,10 +1,5 @@
-import os
 from docx import Document
 import PyPDF2
-
-def get_file_extension(path):
-    _, extension = os.path.splitext(path)
-    return extension
 
 def readResumeContent(resume):
     file_extension = resume.name.split('.')[-1].lower()
