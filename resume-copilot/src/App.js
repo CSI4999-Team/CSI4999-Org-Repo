@@ -17,6 +17,8 @@ function App() {
   const [isUploading, setIsUploading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [inputMethod, setInputMethod] = useState(null); // 'url' or 'description'
+  const [confirmSkip, setConfirmSkip] = useState(false); // New state to track confirmation of skip
+
 
 
   /* Functions */
@@ -32,6 +34,20 @@ function App() {
       setCurrentStep(3);
     }
     // Add more conditions as needed depending on your app's flow.
+    // if skip but then change mind, set confirm skip back to false
+    if (currentStep === 2 && inputMethod === 'general') {
+      setConfirmSkip(false);
+    }
+  };
+  
+  /* Handle for if Skip for general feedback */
+  const handleSkip = () => {
+    const userConfirmed = window.confirm("Are you sure you want to skip and receive general feedback?");
+    if (userConfirmed) {
+      setConfirmSkip(true); // User has confirmed they want to skip
+      setInputMethod('general'); // Set the input method to 'general' for clarity in logic
+      setCurrentStep(3); // Directly move to the resume upload step
+    }
   };
   
 
@@ -137,33 +153,43 @@ function App() {
                   {renderInputChoice()}
                 </CSSTransition>
               )}
-              {currentStep === 2 && inputMethod === 'url' && (
-                <CSSTransition key="urlInput" timeout={1000} classNames="fade">
+              {currentStep === 2 && (
+                <CSSTransition key="inputChoice" timeout={1000} classNames="fade">
                   <div>
-                    <input
-                      className="urlInput"
-                      type="text"
-                      placeholder="Enter URL here"
-                    />
-                    <button onClick={() => setCurrentStep(3)}>Submit</button>
+                    {inputMethod === 'url' && (
+                      <div>
+                        <input
+                          className="urlInput"
+                          type="text"
+                          placeholder="Enter URL here"
+                        />
+                        <button onClick={() => setCurrentStep(3)}>Submit</button>
+                      </div>
+                    )}
+                    {inputMethod === 'description' && (
+                      <div>
+                        <form onSubmit={handleSubmit}>
+                          <textarea
+                            placeholder="Paste job description here"
+                            value={jobDescription}
+                            onChange={handleDescriptionChange}
+                          />
+                          <button type="submit" className="submit-button">Submit</button>
+                        </form>
+                      </div>
+                    )}
+                    {inputMethod === 'general' && !confirmSkip && (
+                      <CSSTransition key="confirmSkip" timeout={1000} classNames="fade">
+                        <div>
+                          <p>Are you sure you want to proceed without specific job details? You will receive general feedback on your resume.</p>
+                          <button onClick={() => { setConfirmSkip(true); }}>Yes, proceed</button>
+                        </div>
+                      </CSSTransition>
+                    )}
+                    <button className="back-button" onClick={handleBack}>Back</button>
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 2 && inputMethod === 'description' && (
-                <CSSTransition key="jobDescriptionInput" timeout={1000} classNames="fade">
-                  <div>
-                    <form onSubmit={handleSubmit}>
-                      <textarea
-                        placeholder="Paste job description here"
-                        value={jobDescription}
-                        onChange={handleDescriptionChange}
-                      />
-                      <button type="submit" className="submit-button">Submit</button>
-                    </form>
-                  </div>
-                </CSSTransition>
-              )}
-
               {currentStep === 3 && (
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
