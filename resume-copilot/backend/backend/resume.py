@@ -6,7 +6,7 @@ def get_file_extension(path):
     _, extension = os.path.splitext(path)
     return extension
 
-def read_resume(resume):
+def readResumeContent(resume):
     file_extension = resume.name.split('.')[-1].lower()
 
     if file_extension == 'pdf':
@@ -34,7 +34,7 @@ def readResume(request):
         resume = request.FILES.get('formData')
         
         try:
-            extracted_text = readResume(resume)
+            extracted_text = readResumeContent(resume)
             return JsonResponse({'extracted_text': extracted_text})
         
         except Exception as e:

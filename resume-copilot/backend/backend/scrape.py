@@ -65,7 +65,7 @@ def scrapeWebsiteCategories(url):
 
     return data
 
-def scrape_website(url):
+def scrapeWebsiteContent(url):
     driver.get(url)
     return driver.find_element(By.CSS_SELECTOR, "body").text
 
@@ -74,7 +74,7 @@ def scrapeWebsite(request):
         url = request.POST.get('url')
         
         try:
-            extracted_text = scrape_website(url)
+            extracted_text = scrapeWebsiteContent(url)
             return JsonResponse({'extracted_text': extracted_text})
         
         except Exception as e:
