@@ -16,8 +16,24 @@ function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isUploading, setIsUploading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [inputMethod, setInputMethod] = useState(null); // 'url' or 'description'
+
 
   /* Functions */
+
+  /* BACK BUTTON FUNCTIONALITY */
+  const handleBack = () => {
+    // If the user is on the step where they input the URL or description,
+    // or they have proceeded to the upload form, let them go back to the choice selection.
+    if (currentStep === 2 || currentStep === 3) {
+      setCurrentStep(1);
+      setInputMethod(null); // Reset the input method choice
+    } else if (currentStep === 4) { // If they are viewing the results, let them go back to the upload form.
+      setCurrentStep(3);
+    }
+    // Add more conditions as needed depending on your app's flow.
+  };
+  
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -75,6 +91,22 @@ function App() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Before return statement in App function
+  const renderInputChoice = () => {
+    return (
+      <div className="choices-container">
+        <div className="main-choices">
+          <button className="choice-button left" onClick={() => { setInputMethod('url'); setCurrentStep(2); }}>Use a URL</button>
+          <button className="choice-button right" onClick={() => { setInputMethod('description'); setCurrentStep(2); }}>Copy Paste a Job Description</button>
+        </div>
+        <div className="skip-choice">
+          <button className="skip-button" onClick={() => { setInputMethod('general'); setCurrentStep(2); }}>Skip / General Feedback</button>
+        </div>
+      </div>
+    );
+  };
+  
+
   /* App Login returned to User */
   
   return (
@@ -100,28 +132,39 @@ function App() {
             <h1>Resume Co-Pilot</h1>
             <div className="transition-container">
             <TransitionGroup component={null}>
-              {currentStep === 1 && (
+              {currentStep === 1 && !inputMethod && (
                 <CSSTransition key={currentStep} timeout={1000} classNames="fade">
+                  {renderInputChoice()}
+                </CSSTransition>
+              )}
+              {currentStep === 2 && inputMethod === 'url' && (
+                <CSSTransition key="urlInput" timeout={1000} classNames="fade">
                   <div>
                     <input
                       className="urlInput"
                       type="text"
                       placeholder="Enter URL here"
                     />
+                    <button onClick={() => setCurrentStep(3)}>Submit</button>
+                  </div>
+                </CSSTransition>
+              )}
+              {currentStep === 2 && inputMethod === 'description' && (
+                <CSSTransition key="jobDescriptionInput" timeout={1000} classNames="fade">
+                  <div>
                     <form onSubmit={handleSubmit}>
                       <textarea
                         placeholder="Paste job description here"
                         value={jobDescription}
                         onChange={handleDescriptionChange}
                       />
-                      <button type="submit" className="submit-button">
-                        Submit
-                      </button>
+                      <button type="submit" className="submit-button">Submit</button>
                     </form>
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 2 && (
+
+              {currentStep === 3 && (
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
@@ -133,7 +176,7 @@ function App() {
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 3 && analysisResult && (
+              {currentStep === 4 && analysisResult && (
                 <CSSTransition key="results" timeout={1000} classNames="fade">
                   <div className="analysisResultMarkdownContainer">
                     <ReactMarkdown>{analysisResult}</ReactMarkdown>
