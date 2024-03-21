@@ -34,14 +34,13 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
     formData.append("file", file);
 
     try {
-      const tmpData = null;
       // Step 1: Extract resume text from the uploaded PDF file
       const parseResume= await fetch("http://localhost:8000/resume/", {
         method: "POST",
-        body: tmpData,
+        body: formData,
       });
-      const parseData = await parseResume.json();
-      const resumeText = parseData.extracted_text;
+      const resumeJson = await parseResume.json();
+      const resumeText = resumeJson.extracted_text;
 
       // need to have this variable be the URL that the user inputs
       const url = null;
@@ -51,6 +50,8 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
         method: "POST",
         body: url,
       });
+      const jobPostingJson = await parseJobPosting.json();
+      const resumeText = jobPostingJson.extracted_text;
 
       // Call the callback with the analysis result
       onAnalysisComplete(analyzeData.response);
