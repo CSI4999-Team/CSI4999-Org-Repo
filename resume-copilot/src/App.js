@@ -60,8 +60,8 @@ const handleSkip = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert("Resume and job description submitted!");
-    setCurrentStep(2);
+    alert("job description submitted");
+    setCurrentStep(3);
   };
 
   const toggleSidebar = () => {
@@ -193,7 +193,7 @@ const handleSkip = () => {
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
-                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} confirmSkip={confirmSkip}/>
+                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip}/>
                     ) : (
                       // TODO: Make Dynamic Loading Screen
                       <div>Loading...</div> // Transition smooth to Loading... static

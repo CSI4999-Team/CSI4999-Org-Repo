@@ -56,13 +56,14 @@ def analyze_resume(request):
             user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
 
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
+            job_desc = data.get('job_desc', '')
 
             if confirm_skip:
                 # If user chooses to skip, assign a custom prompt to job_description
                 job_description = "The user has not provided a specific job description and has opted for general feedback. Please begin your expert response with 'Having opted for general feedback, ...'"
             else:
                 # Otherwise, use the provided job description
-                job_description = data.get('user_message', '')
+                job_description = job_desc
                 
             # Make a single request to the OpenAI API using the user message
             chat_completion = client.chat.completions.create(
