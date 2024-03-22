@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./UploadForm.css";
 
-function UploadForm({ onAnalysisComplete, onStartUploading }) {
+function UploadForm({ onAnalysisComplete, onStartUploading, confirmSkip }) {
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const fileInputRef = useRef(null);
@@ -48,7 +48,10 @@ function UploadForm({ onAnalysisComplete, onStartUploading }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ resume_text: resumeText }),
+        body: JSON.stringify({ 
+          resume_text: resumeText,
+          confirm_skip: confirmSkip
+         }),
       });
       const analyzeData = await analyzeResponse.json();
 

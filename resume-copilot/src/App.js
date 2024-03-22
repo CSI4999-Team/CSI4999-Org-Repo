@@ -193,7 +193,7 @@ const handleSkip = () => {
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
-                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} />
+                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} confirmSkip={confirmSkip}/>
                     ) : (
                       // TODO: Make Dynamic Loading Screen
                       <div>Loading...</div> // Transition smooth to Loading... static

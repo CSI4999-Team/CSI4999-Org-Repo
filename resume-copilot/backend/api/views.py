@@ -55,13 +55,21 @@ def analyze_resume(request):
             resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
             user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
 
+            confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
 
+            if confirm_skip:
+                # If user chooses to skip, assign a custom prompt to job_description
+                job_description = "The user has not provided a specific job description and has opted for general feedback. Please begin your expert response with 'Having opted for general feedback, ...'"
+            else:
+                # Otherwise, use the provided job description
+                job_description = data.get('user_message', '')
+                
             # Make a single request to the OpenAI API using the user message
             chat_completion = client.chat.completions.create(
                 messages=[
-                    {"role": "system", "content": "You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. Please provide some feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, just give general feedback."},
+                    {"role": "system", "content": "You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. Please provide some tailored feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, there will be a generic feedback message."},
                     {"role": "user", "content": resume_text},  # Resume text as context
-                    {"role": "user", "content": user_message}
+                    {"role": "user", "content": job_description}
                 ],
                 model="gpt-3.5-turbo",
             )
