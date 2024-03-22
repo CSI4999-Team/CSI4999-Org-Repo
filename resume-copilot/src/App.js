@@ -115,7 +115,7 @@ const handleSkip = () => {
           <button className="choice-button right" onClick={() => { setInputMethod('description'); setCurrentStep(2); }}>Copy Paste a Job Description</button>
         </div>
         <div className="skip-choice">
-          <button className="skip-button" onClick={handleSkip}>Skip / General Feedback</button>
+          <button className="skip-button" onClick={() => { setInputMethod('general'); setCurrentStep(2); }}>Skip / General Feedback</button>
         </div>
       </div>
     );
@@ -181,7 +181,7 @@ const handleSkip = () => {
                       <CSSTransition key="confirmSkip" timeout={1000} classNames="fade">
                         <div>
                           <p>Are you sure you want to proceed without specific job details? You will receive general feedback on your resume.</p>
-                          <button onClick={() => { setConfirmSkip(true); }}>Yes, proceed</button>
+                          <button onClick={() => { setConfirmSkip(true); setCurrentStep(3);}}>Yes, proceed</button>
                         </div>
                       </CSSTransition>
                     )}
@@ -189,7 +189,7 @@ const handleSkip = () => {
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 3 && (
+              {currentStep === 3 && !analysisResult &&(
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
@@ -201,7 +201,7 @@ const handleSkip = () => {
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 4 && analysisResult && (
+              {currentStep === 3 && analysisResult && (
                 <CSSTransition key="results" timeout={1000} classNames="fade">
                   <div className="analysisResultMarkdownContainer">
                     <ReactMarkdown>{analysisResult}</ReactMarkdown>
