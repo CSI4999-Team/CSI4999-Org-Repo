@@ -41,15 +41,14 @@ function App() {
   };
   
   /* Handle for if Skip for general feedback */
-  const handleSkip = () => {
-    const userConfirmed = window.confirm("Are you sure you want to skip and receive general feedback?");
-    if (userConfirmed) {
-      setConfirmSkip(true); // User has confirmed they want to skip
-      setInputMethod('general'); // Set the input method to 'general' for clarity in logic
-      setCurrentStep(3); // Directly move to the resume upload step
-    }
-  };
-  
+const handleSkip = () => {
+  const userConfirmed = window.confirm("Are you sure you want to skip and receive general feedback?");
+  if (userConfirmed) {
+    setConfirmSkip(true); // User has confirmed they want to skip
+    setInputMethod('general'); // Set the input method to 'general' for clarity in logic
+    setCurrentStep(3); // Directly move to the resume upload step
+  }
+};
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -116,7 +115,7 @@ function App() {
           <button className="choice-button right" onClick={() => { setInputMethod('description'); setCurrentStep(2); }}>Copy Paste a Job Description</button>
         </div>
         <div className="skip-choice">
-          <button className="skip-button" onClick={() => { setInputMethod('general'); setCurrentStep(2); }}>Skip / General Feedback</button>
+          <button className="skip-button" onClick={handleSkip}>Skip / General Feedback</button>
         </div>
       </div>
     );
