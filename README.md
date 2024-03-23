@@ -29,6 +29,8 @@ What things you need to install the software and how to install them:
 
  ```npm install react-markdown```
 
+ ```npm install react-transition-group```
+
  ```npm install @auth0/auth0-react```
 
  ```npm start```
@@ -66,6 +68,35 @@ What things you need to install the software and how to install them:
 ## Deployment
 
 TODO: Add additional notes about how to deploy this on a production system
+
+### Changes Required to run in Production:
+
+#### Change #1: resume-copilot/backend/backend/settings.py
+
+* Change DEBUG = True -> DEBUG = False
+
+* ALLOWED_HOSTS = ['*'] ->  
+
+ALLOWED_HOSTS = ['resumecopilot.us', 'www.resumecopilot.us', 'resume-copilot-app-l4o8t.ondigitalocean.app', '104.131.187.171', 'api.resumecopilot.us']
+
+* CORS_ALLOW_ALL_ORIGINS = True ->
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Allow local development
+    "https://resumecopilot.us",
+    "https://www.resumecopilot.us",
+    "https://resume-copilot-app-l4o8t.ondigitalocean.app",  # Your React app's domain
+]
+
+#### Change #2: resume-copilot/src/components/UploadForm.js
+
+* const parseResponse = await fetch("http://localhost:8000/api/parse_pdf/", { ... ->
+
+const parseResponse = await fetch("https://api.resumecopilot.us/api/parse_pdf/", { ...
+
+* const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", { ... ->
+
+const analyzeResponse = await fetch("https://api.resumecopilot.us/api/analyze_resume/", {
 
 ## Built With
 
