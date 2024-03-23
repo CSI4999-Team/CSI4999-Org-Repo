@@ -162,7 +162,10 @@ const handleSkip = () => {
                           type="text"
                           placeholder="Enter URL here"
                         />
-                        <button onClick={() => setCurrentStep(3)}>Submit</button>
+                        <button onClick={() => {
+                          alert("To use the URL scraping feature is currently unavailable. Please manually copy-paste your job description.");
+                          handleBack(); // Redirect back to the main page or step
+                        }}>Submit</button>
                       </div>
                     )}
                     {inputMethod === 'description' && (
