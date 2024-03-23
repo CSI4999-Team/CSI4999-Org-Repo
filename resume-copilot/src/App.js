@@ -16,8 +16,39 @@ function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isUploading, setIsUploading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [inputMethod, setInputMethod] = useState(null); // 'url' or 'description'
+  const [confirmSkip, setConfirmSkip] = useState(false); // New state to track confirmation of skip
+
+
 
   /* Functions */
+
+  /* BACK BUTTON FUNCTIONALITY */
+  const handleBack = () => {
+    // If the user is on the step where they input the URL or description,
+    // or they have proceeded to the upload form, let them go back to the choice selection.
+    if (currentStep === 2 || currentStep === 3) {
+      setCurrentStep(1);
+      setInputMethod(null); // Reset the input method choice
+    } else if (currentStep === 4) { // If they are viewing the results, let them go back to the upload form.
+      setCurrentStep(3);
+    }
+    // Add more conditions as needed depending on your app's flow.
+    // if skip but then change mind, set confirm skip back to false
+    if (currentStep === 2 && inputMethod === 'general') {
+      setConfirmSkip(false);
+    }
+  };
+  
+  /* Handle for if Skip for general feedback */
+const handleSkip = () => {
+  const userConfirmed = window.confirm("Are you sure you want to skip and receive general feedback?");
+  if (userConfirmed) {
+    setConfirmSkip(true); // User has confirmed they want to skip
+    setInputMethod('general'); // Set the input method to 'general' for clarity in logic
+    setCurrentStep(3); // Directly move to the resume upload step
+  }
+};
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -29,8 +60,8 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert("Resume and job description submitted!");
-    setCurrentStep(2);
+    alert("job description submitted");
+    setCurrentStep(3);
   };
 
   const toggleSidebar = () => {
@@ -75,6 +106,22 @@ function App() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Before return statement in App function
+  const renderInputChoice = () => {
+    return (
+      <div className="choices-container">
+        <div className="main-choices">
+          <button className="choice-button left" onClick={() => { setInputMethod('url'); setCurrentStep(2); }}>Use a URL</button>
+          <button className="choice-button right" onClick={() => { setInputMethod('description'); setCurrentStep(2); }}>Copy Paste a Job Description</button>
+        </div>
+        <div className="skip-choice">
+          <button className="skip-button" onClick={() => { setInputMethod('general'); setCurrentStep(2); }}>Skip / General Feedback</button>
+        </div>
+      </div>
+    );
+  };
+  
+
   /* App Login returned to User */
   
   return (
@@ -100,32 +147,56 @@ function App() {
             <h1>Resume Co-Pilot</h1>
             <div className="transition-container">
             <TransitionGroup component={null}>
-              {currentStep === 1 && (
+              {currentStep === 1 && !inputMethod && (
                 <CSSTransition key={currentStep} timeout={1000} classNames="fade">
-                  <div>
-                    <input
-                      className="urlInput"
-                      type="text"
-                      placeholder="Enter URL here"
-                    />
-                    <form onSubmit={handleSubmit}>
-                      <textarea
-                        placeholder="Paste job description here"
-                        value={jobDescription}
-                        onChange={handleDescriptionChange}
-                      />
-                      <button type="submit" className="submit-button">
-                        Submit
-                      </button>
-                    </form>
-                  </div>
+                  {renderInputChoice()}
                 </CSSTransition>
               )}
               {currentStep === 2 && (
+                <CSSTransition key="inputChoice" timeout={1000} classNames="fade">
+                  <div>
+                    {inputMethod === 'url' && (
+                      <div>
+                        <input
+                          className="urlInput"
+                          type="text"
+                          placeholder="Enter URL here"
+                        />
+                        <button onClick={() => {
+                          alert("To use the URL scraping feature is currently unavailable. Please manually copy-paste your job description.");
+                          handleBack(); // Redirect back to the main page or step
+                        }}>Submit</button>
+                      </div>
+                    )}
+                    {inputMethod === 'description' && (
+                      <div>
+                        <form onSubmit={handleSubmit}>
+                          <textarea
+                            placeholder="Paste job description here"
+                            value={jobDescription}
+                            onChange={handleDescriptionChange}
+                          />
+                          <button type="submit" className="submit-button">Submit</button>
+                        </form>
+                      </div>
+                    )}
+                    {inputMethod === 'general' && !confirmSkip && (
+                      <CSSTransition key="confirmSkip" timeout={1000} classNames="fade">
+                        <div>
+                          <p>Are you sure you want to proceed without specific job details? You will receive general feedback on your resume.</p>
+                          <button onClick={() => { setConfirmSkip(true); setCurrentStep(3);}}>Yes, proceed</button>
+                        </div>
+                      </CSSTransition>
+                    )}
+                    <button className="back-button" onClick={handleBack}>Back</button>
+                  </div>
+                </CSSTransition>
+              )}
+              {currentStep === 3 && !analysisResult &&(
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
-                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} />
+                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip}/>
                     ) : (
                       // TODO: Make Dynamic Loading Screen
                       <div>Loading...</div> // Transition smooth to Loading... static
