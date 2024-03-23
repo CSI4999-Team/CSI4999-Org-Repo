@@ -33,6 +33,8 @@ What things you need to install the software and how to install them:
 
  ```npm install @auth0/auth0-react```
 
+ ```npm install react-router-dom@6```
+
  ```npm start```
 
 * To activate the Django backend, which will run on http://127.0.0.1:8000:

@@ -5,7 +5,11 @@ import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import "./App.css";
+// Import pages from components
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsAndConditions from './components/TermsAndConditions';
 
 
 function App() {
@@ -126,11 +130,18 @@ const handleSkip = () => {
   /* App Login returned to User */
   
   return (
+    <BrowserRouter>
     <div className="App">
       {isAuthenticated ? (
         <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
           <header className="App-header">
             {/* Other content */}
+            <nav>
+                {/* Updated navigation links */}
+                <Link to="/">Home</Link>
+                <Link to="/privacy-policy">Privacy Policy</Link>
+                <Link to="/terms-and-conditions">Terms and Conditions</Link>
+              </nav>
             <div className="menu-container">
               <button onClick={toggleMenu} className="hamburger-menu">☰</button>
               {isMenuOpen && (
@@ -144,6 +155,9 @@ const handleSkip = () => {
           </header>
           <div className="toggle-button" onClick={toggleSidebar}></div>
           <main className="App-main">
+          <Routes>
+          <Route path="/" element={
+             <>
             <LeftBar isOpen={sidebarOpen} />
             <h1>Resume Co-Pilot</h1>
             <div className="transition-container">
@@ -214,12 +228,18 @@ const handleSkip = () => {
               )}
             </TransitionGroup>
             </div>
+            </>
+            } />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          </Routes>
           </main>
         </div>
       ) : (
         <div>Redirecting to login...</div>
       )}
     </div>
+    </BrowserRouter>
   );
 }
 
