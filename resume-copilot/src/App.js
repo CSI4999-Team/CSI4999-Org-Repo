@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import LeftBar from "./components/LeftBar";
-import UploadForm from './components/UploadForm';
-import ReactMarkdown from 'react-markdown';
-import LogoutButton from './components/Logout';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import UploadForm from "./components/UploadForm";
+import ReactMarkdown from "react-markdown";
+import LogoutButton from "./components/Logout";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./App.css";
 
 function App() {
@@ -48,9 +48,15 @@ function App() {
       let currentIndex = 0;
       const interval = setInterval(() => {
         if (currentIndex < analysisResult.length) {
-          const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
-          const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
-          setAnalysisResult(prevResult => prevResult + nextChunk);
+          const nextChunkEndIndex = Math.min(
+            currentIndex + chunkSize,
+            analysisResult.length
+          );
+          const nextChunk = analysisResult.substring(
+            currentIndex,
+            nextChunkEndIndex
+          );
+          setAnalysisResult((prevResult) => prevResult + nextChunk);
           currentIndex += chunkSize;
         } else {
           clearInterval(interval);
@@ -64,6 +70,29 @@ function App() {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector(".Navbar");
+      if (navbar) {
+        if (window.scrollY > 0) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       loginWithRedirect();
     }
@@ -71,20 +100,18 @@ function App() {
 
   if (isLoading) return <div>Loading...</div>;
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   /* App Login returned to User */
-  
+
   return (
     <div className="App">
       {isAuthenticated ? (
         <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
-          <header className="App-header">
+          <header className="Navbar">
             {/* Other content */}
             <div className="menu-container">
-              <button onClick={toggleMenu} className="hamburger-menu">☰</button>
+              <button onClick={toggleMenu} className="hamburger-menu">
+                ☰
+              </button>
               {isMenuOpen && (
                 <div className="dropdown-menu">
                   <a href="/manage-account">Manage Account</a>
@@ -93,54 +120,80 @@ function App() {
                 </div>
               )}
             </div>
+            <div class="NavbarPages">
+              <a href="/manage-account" class="">
+                Manage Account
+              </a>
+              <a href="/change-preferences" class="">
+                Change Preferences
+              </a>
+            </div>
           </header>
-          <div className="toggle-button" onClick={toggleSidebar}></div>
+          {/* This is the tab for the side menu */}
+          <div className="toggle-button" onClick={toggleSidebar}>
+            <img
+              src="./arrow-right.svg"
+              alt="An arrow"
+              style={{ transform: sidebarOpen ? "scaleX(-1)" : "scaleX(1)" }}
+            />
+          </div>
           <main className="App-main">
             <LeftBar isOpen={sidebarOpen} />
             <h1>Resume Co-Pilot</h1>
             <div className="transition-container">
-            <TransitionGroup component={null}>
-              {currentStep === 1 && (
-                <CSSTransition key={currentStep} timeout={1000} classNames="fade">
-                  <div>
-                    <input
-                      className="urlInput"
-                      type="text"
-                      placeholder="Enter URL here"
-                    />
-                    <form onSubmit={handleSubmit}>
-                      <textarea
-                        placeholder="Paste job description here"
-                        value={jobDescription}
-                        onChange={handleDescriptionChange}
+              <TransitionGroup component={null}>
+                {currentStep === 1 && (
+                  <CSSTransition
+                    key={currentStep}
+                    timeout={1000}
+                    classNames="fade"
+                  >
+                    <div>
+                      <input
+                        className="urlInput"
+                        type="text"
+                        placeholder="Enter URL here"
                       />
-                      <button type="submit" className="submit-button">
-                        Submit
-                      </button>
-                    </form>
-                  </div>
-                </CSSTransition>
-              )}
-              {currentStep === 2 && (
-                <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
-                  <div>
-                    {!isUploading ? (
-                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} />
-                    ) : (
-                      // TODO: Make Dynamic Loading Screen
-                      <div>Loading...</div> // Transition smooth to Loading... static
-                    )}
-                  </div>
-                </CSSTransition>
-              )}
-              {currentStep === 3 && analysisResult && (
-                <CSSTransition key="results" timeout={1000} classNames="fade">
-                  <div className="analysisResultMarkdownContainer">
-                    <ReactMarkdown>{analysisResult}</ReactMarkdown>
-                  </div>
-                </CSSTransition>
-              )}
-            </TransitionGroup>
+                      <form onSubmit={handleSubmit}>
+                        <textarea
+                          placeholder="Paste job description here"
+                          value={jobDescription}
+                          onChange={handleDescriptionChange}
+                        />
+                        <button type="submit" className="submit-button">
+                          Submit
+                        </button>
+                      </form>
+                    </div>
+                  </CSSTransition>
+                )}
+                {currentStep === 2 && (
+                  <CSSTransition
+                    key={isUploading ? "loading" : "uploadForm"}
+                    timeout={1000}
+                    classNames="fade"
+                  >
+                    <div>
+                      {!isUploading ? (
+                        <UploadForm
+                          onAnalysisComplete={handleAnalysisComplete}
+                          onStartUploading={startUploading}
+                        />
+                      ) : (
+                        // TODO: Make Dynamic Loading Screen
+                        <div>Loading...</div> // Transition smooth to Loading... static
+                      )}
+                    </div>
+                  </CSSTransition>
+                )}
+                {currentStep === 3 && analysisResult && (
+                  <CSSTransition key="results" timeout={1000} classNames="fade">
+                    <div className="analysisResultMarkdownContainer">
+                      <ReactMarkdown>{analysisResult}</ReactMarkdown>
+                    </div>
+                  </CSSTransition>
+                )}
+              </TransitionGroup>
             </div>
           </main>
         </div>
@@ -151,4 +204,4 @@ function App() {
   );
 }
 
-export default App;  
+export default App;
