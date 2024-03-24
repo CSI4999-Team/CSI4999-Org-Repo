@@ -121,10 +121,10 @@ function App() {
               )}
             </div>
             <div class="NavbarPages">
-              <a href="/manage-account" class="">
+              <a href="/manage-account" class="navbar-links">
                 Manage Account
               </a>
-              <a href="/change-preferences" class="">
+              <a href="/change-preferences" class="navbar-links">
                 Change Preferences
               </a>
             </div>
@@ -139,61 +139,77 @@ function App() {
           </div>
           <main className="App-main">
             <LeftBar isOpen={sidebarOpen} />
-            <h1>Resume Co-Pilot</h1>
-            <div className="transition-container">
-              <TransitionGroup component={null}>
-                {currentStep === 1 && (
-                  <CSSTransition
-                    key={currentStep}
-                    timeout={1000}
-                    classNames="fade"
-                  >
-                    <div>
-                      <input
-                        className="urlInput"
-                        type="text"
-                        placeholder="Enter URL here"
-                      />
-                      <form onSubmit={handleSubmit}>
-                        <textarea
-                          placeholder="Paste job description here"
-                          value={jobDescription}
-                          onChange={handleDescriptionChange}
+            <div
+              className="exp"
+              style={{
+                backgroundColor: "#23272e",
+                padding: "30px",
+                borderRadius: "10px",
+                textAlign: "center",
+                justifyContent: "center",
+              }}
+            >
+              <h3 className="Welcome-Words">Welcome to</h3>
+              <h1 className="Resume-Title">Resume Co-Pilot</h1>
+              <div className="transition-container">
+                <TransitionGroup component={null}>
+                  {currentStep === 1 && (
+                    <CSSTransition
+                      key={currentStep}
+                      timeout={1000}
+                      classNames="fade"
+                    >
+                      <div>
+                        <input
+                          className="urlInput"
+                          type="text"
+                          placeholder="Enter URL here"
                         />
-                        <button type="submit" className="submit-button">
-                          Submit
-                        </button>
-                      </form>
-                    </div>
-                  </CSSTransition>
-                )}
-                {currentStep === 2 && (
-                  <CSSTransition
-                    key={isUploading ? "loading" : "uploadForm"}
-                    timeout={1000}
-                    classNames="fade"
-                  >
-                    <div>
-                      {!isUploading ? (
-                        <UploadForm
-                          onAnalysisComplete={handleAnalysisComplete}
-                          onStartUploading={startUploading}
-                        />
-                      ) : (
-                        // TODO: Make Dynamic Loading Screen
-                        <div>Loading...</div> // Transition smooth to Loading... static
-                      )}
-                    </div>
-                  </CSSTransition>
-                )}
-                {currentStep === 3 && analysisResult && (
-                  <CSSTransition key="results" timeout={1000} classNames="fade">
-                    <div className="analysisResultMarkdownContainer">
-                      <ReactMarkdown>{analysisResult}</ReactMarkdown>
-                    </div>
-                  </CSSTransition>
-                )}
-              </TransitionGroup>
+                        <form onSubmit={handleSubmit}>
+                          <textarea
+                            placeholder="Paste job description here"
+                            value={jobDescription}
+                            onChange={handleDescriptionChange}
+                          />
+                          <button type="submit" className="submit-button">
+                            Submit
+                          </button>
+                        </form>
+                      </div>
+                    </CSSTransition>
+                  )}
+                  {currentStep === 2 && (
+                    <CSSTransition
+                      key={isUploading ? "loading" : "uploadForm"}
+                      timeout={1000}
+                      classNames="fade"
+                    >
+                      <div>
+                        {!isUploading ? (
+                          <UploadForm
+                            onAnalysisComplete={handleAnalysisComplete}
+                            onStartUploading={startUploading}
+                          />
+                        ) : (
+                          // TODO: Make Dynamic Loading Screen
+                          <div>Loading...</div> // Transition smooth to Loading... static
+                        )}
+                      </div>
+                    </CSSTransition>
+                  )}
+                  {currentStep === 3 && analysisResult && (
+                    <CSSTransition
+                      key="results"
+                      timeout={1000}
+                      classNames="fade"
+                    >
+                      <div className="analysisResultMarkdownContainer">
+                        <ReactMarkdown>{analysisResult}</ReactMarkdown>
+                      </div>
+                    </CSSTransition>
+                  )}
+                </TransitionGroup>
+              </div>
             </div>
           </main>
         </div>

@@ -52,9 +52,10 @@ button {
 }
 
 .Navbar {
-  outline: 2px solid;
-  width: 100%;
-  height: 6rem;
+  /* outline: 2px solid; */
+  width: calc(100% - 200px);
+  /* width: 100%; */
+  height: 5.5rem;
   /* Set your desired height */
   background-color: #282c34;
   /* Adjust opacity as needed */
@@ -63,7 +64,7 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 1.5rem;
   transition: background-color 0.5s ease;
   position: fixed;
   top: 0;
@@ -71,16 +72,21 @@ button {
   /* Stretch the navbar from left to right */
   z-index: 998;
   /* Ensures the navbar is above other elements */
+  margin-top: 35px;
+  margin-left: 75px;
+  border-radius: 2rem;
 }
 
 .NavbarPages {
   position: center;
   display: flex;
   gap: 1rem;
+  color: white;
 }
 
 .Navbar.scrolled {
   background-color: #1DB8D4;
+  opacity: 0.7;
   /* Color when scrolled */
 }
 
@@ -93,22 +99,19 @@ button {
   width: 100px;
 }
 
-.nav-links {
+.navbar-links {
   display: flex;
   gap: 1rem;
   /* Adjust gap as needed */
-}
-
-.nav-link {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   /* Adjust font size as needed */
-  font-weight: 600;
+  font-weight: 500;
   /* Adjust font weight as needed */
-  color: #ffffff;
   /* Set your desired color */
-  text-decoration: none;
   transition: color 0.2s ease;
   /* Adjust transition as needed */
+  text-decoration: none;
+  color: #1DB8D4;
 }
 
 .nav-link:hover {
@@ -209,7 +212,7 @@ button {
   margin-top: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 300px;
+  width: 97%;
 }
 
 .analysisResultMarkdownContainer {
@@ -243,14 +246,6 @@ button {
 
 .sidebarContainer {
   position: relative;
-  /* Ensure relative positioning */
-  /* z-index: 999;
-  cursor: pointer;
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 0 5px 5px 0;
-  margin: -1px;
-  margin-right: 1000px; */
 }
 
 .toggle-button {
@@ -285,9 +280,9 @@ button {
 }
 
 .hamburger-menu {
-  background-color: #1DB8D4;
   /* Adjust to match your header */
-  color: white;
+  color: #1DB8D4;
+  background-color: #23272e;
   padding: 10px;
   border: none;
   cursor: pointer;
@@ -353,4 +348,19 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+/* Welcoming title styling */
+
+.Welcome-Words {
+  padding: 0px;
+  margin-bottom: 0px;
+}
+
+.Resume-Title {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  text-shadow: 5px 5px 5px #1DB8D4;
+  /* Adjust values as needed */
 }
