@@ -4,6 +4,7 @@ import LeftBar from "./components/LeftBar";
 import UploadForm from "./components/UploadForm";
 import ReactMarkdown from "react-markdown";
 import LogoutButton from "./components/Logout";
+import Stepper from "./components/Stepper";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./App.css";
 
@@ -160,6 +161,7 @@ function App() {
                       classNames="fade"
                     >
                       <div>
+                        <Stepper />
                         <input
                           className="urlInput"
                           type="text"
