@@ -7,8 +7,10 @@ import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import "./App.css";
 
+
+
 function App() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");
@@ -16,7 +18,10 @@ function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isUploading, setIsUploading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  //const userId = user.id;
+  const userId = user?.sub;
 
+  console.log(userId);
   /* Functions */
 
   const handleFileChange = (event) => {
@@ -65,10 +70,14 @@ function App() {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
+      console.log('Is authenticated:', isAuthenticated);
+      console.log('User object:', user);
+      console.log('User ID:', userId);
+      console.log(userId);
       loginWithRedirect();
-    }
-  }, [isLoading, isAuthenticated, loginWithRedirect]);
-
+    }  
+  }, [isLoading, isAuthenticated, loginWithRedirect,user, userId]);
+  console.log(userId);
   if (isLoading) return <div>Loading...</div>;
 
   const toggleMenu = () => {

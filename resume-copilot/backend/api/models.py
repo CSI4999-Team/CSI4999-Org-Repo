@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+class ResumeRecommendation(models.Model):
+    user_id = models.CharField(max_length=200)
+    resume = models.TextField()
+    recommendation = models.TextField()

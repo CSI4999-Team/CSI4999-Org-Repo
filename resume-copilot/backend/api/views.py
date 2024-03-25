@@ -38,7 +38,8 @@ def parse_pdf(request):
         # Store the extracted text in the session or another storage
         request.session['resume_text'] = text  # Example using Django session
         request.session.save()  # Explicitly save the session
-        
+        resume_recommendation = ResumeRecommendation(user_id=request.user.id, resume=text)
+        resume_recommendation.save()
         return JsonResponse({'extracted_text': text})
     else:
         return HttpResponse("Invalid request", status=400)
@@ -66,10 +67,8 @@ def analyze_resume(request):
                 model="gpt-3.5-turbo",
             )
 
-            # Ensure the response is in text format
-            response_text = chat_completion.choices[0].message.content.strip()
-
-            return JsonResponse({'response': response_text})
+        
+        # return JsonResponse({'response': response_text})
         except openai.RateLimitError:
             return JsonResponse({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
         except openai.OpenAIError as e:
