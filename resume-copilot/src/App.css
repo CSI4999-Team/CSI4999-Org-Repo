@@ -404,5 +404,19 @@ button {
   background-color: #e1e1e1; /* Slightly darker on hover */
 }
 
+.pagelinks{
+margin: px;
+}
 
+.link{
+  margin: 10px;
+  text-decoration: none;
+  color: white;
+}
+
+.link:hover{
+  background-color: #ddd;
+  border-radius: 5px;
+  
+}
 

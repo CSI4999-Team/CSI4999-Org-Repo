@@ -10,6 +10,7 @@ import "./App.css";
 // Import pages from components
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
+import TipsAndTricks from './components/TipsAndTricks';
 
 
 function App() {
@@ -136,11 +137,12 @@ const handleSkip = () => {
         <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
           <header className="App-header">
             {/* Other content */}
-            <nav>
+            <nav className="pagelinks">
                 {/* Updated navigation links */}
-                <Link to="/">Home</Link>
-                <Link to="/privacy-policy">Privacy Policy</Link>
-                <Link to="/terms-and-conditions">Terms and Conditions</Link>
+                <Link className="link"to="/">Home</Link>
+                <Link className="link"to="/tips-and-tricks">Tips and Tricks</Link>
+                <Link className="link"to="/privacy-policy">Privacy Policy</Link>
+                <Link className="link"to="/terms-and-conditions">Terms and Conditions</Link>
               </nav>
             <div className="menu-container">
               <button onClick={toggleMenu} className="hamburger-menu">☰</button>
@@ -232,6 +234,7 @@ const handleSkip = () => {
             } />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/tips-and-tricks" element={<TipsAndTricks />} />
           </Routes>
           </main>
         </div>
