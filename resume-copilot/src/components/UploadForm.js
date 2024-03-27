@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./UploadForm.css";
 
-function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, confirmSkip }) {
+function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, confirmSkip, outputMethod }) {
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const fileInputRef = useRef(null);
@@ -51,7 +51,8 @@ function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, conf
         body: JSON.stringify({ 
           resume_text: resumeText,
           confirm_skip: confirmSkip,
-          job_desc: jobDescription
+          job_desc: jobDescription,
+          output_method: outputMethod
          }),
       });
       const analyzeData = await analyzeResponse.json();

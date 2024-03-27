@@ -48,12 +48,14 @@ client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @csrf_exempt
 def analyze_resume(request):
+    print('analyze_resume')
     if request.method == 'POST':
         try:
             # Retrieve the resume text from the session or other storage
             data = json.loads(request.body)  # Correctly load the JSON data sent from the frontend
             resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
             user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
+            output_method = data.get('output_method', '')
 
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
             job_desc = data.get('job_desc', '')
