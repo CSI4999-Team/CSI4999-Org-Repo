@@ -17,6 +17,7 @@ function App() {
   const [isUploading, setIsUploading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [inputMethod, setInputMethod] = useState(null); // 'url' or 'description'
+  const [outputMethod, setOutputMethod] = useState(null); // 'text' or 'overlay'
   const [confirmSkip, setConfirmSkip] = useState(false); // New state to track confirmation of skip
 
 
@@ -30,8 +31,8 @@ function App() {
     if (currentStep === 2 || currentStep === 3) {
       setCurrentStep(1);
       setInputMethod(null); // Reset the input method choice
-    } else if (currentStep === 4) { // If they are viewing the results, let them go back to the upload form.
-      setCurrentStep(3);
+    } else if (currentStep === 5) { // If they are viewing the results, let them go back to the upload form.
+      setCurrentStep(4);
     }
     // Add more conditions as needed depending on your app's flow.
     // if skip but then change mind, set confirm skip back to false
@@ -46,7 +47,7 @@ const handleSkip = () => {
   if (userConfirmed) {
     setConfirmSkip(true); // User has confirmed they want to skip
     setInputMethod('general'); // Set the input method to 'general' for clarity in logic
-    setCurrentStep(3); // Directly move to the resume upload step
+    setCurrentStep(4); // Directly move to the resume upload step
   }
 };
 
@@ -61,7 +62,7 @@ const handleSkip = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     alert("job description submitted");
-    setCurrentStep(3);
+    setCurrentStep(4);
   };
 
   const toggleSidebar = () => {
@@ -72,7 +73,7 @@ const handleSkip = () => {
     // Wait for the API call to finish and then process the result
     setTimeout(() => {
       setIsUploading(false); // Stop showing the loading screen
-      setCurrentStep(3); // Move to the result display step
+      setCurrentStep(4); // Move to the result display step
 
       // Initialize the "dripping" effect for displaying the analysis results
       const chunkSize = 5;
@@ -120,6 +121,17 @@ const handleSkip = () => {
       </div>
     );
   };
+
+  const renderSecondInputChoice = () => {
+    return (
+      <div className="choices-container">
+        <div className="main-choices">
+          <button className="choice-button left" onClick={() => { setOutputMethod('text'); setCurrentStep(3); }}>Text Advice</button>
+          <button className="choice-button right" onClick={() => { setOutputMethod('overlay'); setCurrentStep(3); }}>Overlayed Advice</button>
+        </div>
+      </div>
+    );
+  };
   
 
   /* App Login returned to User */
@@ -153,6 +165,11 @@ const handleSkip = () => {
                 </CSSTransition>
               )}
               {currentStep === 2 && (
+                <CSSTransition key={currentStep} timeout={1000} classNames="fade">
+                  {renderSecondInputChoice()}
+                </CSSTransition>
+              )}
+              {currentStep === 3 && (
                 <CSSTransition key="inputChoice" timeout={1000} classNames="fade">
                   <div>
                     {inputMethod === 'url' && (
@@ -184,7 +201,7 @@ const handleSkip = () => {
                       <CSSTransition key="confirmSkip" timeout={1000} classNames="fade">
                         <div>
                           <p>Are you sure you want to proceed without specific job details? You will receive general feedback on your resume.</p>
-                          <button onClick={() => { setConfirmSkip(true); setCurrentStep(3);}}>Yes, proceed</button>
+                          <button onClick={() => { setConfirmSkip(true); setCurrentStep(4);}}>Yes, proceed</button>
                         </div>
                       </CSSTransition>
                     )}
@@ -192,11 +209,11 @@ const handleSkip = () => {
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 3 && !analysisResult &&(
+              {currentStep === 4 && !analysisResult &&(
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
-                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip}/>
+                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip} outputMethod={outputMethod}/>
                     ) : (
                       // TODO: Make Dynamic Loading Screen
                       <div>Loading...</div> // Transition smooth to Loading... static
@@ -204,7 +221,7 @@ const handleSkip = () => {
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 3 && analysisResult && (
+              {currentStep === 4 && analysisResult && (
                 <CSSTransition key="results" timeout={1000} classNames="fade">
                   <div className="analysisResultMarkdownContainer">
                     <ReactMarkdown>{analysisResult}</ReactMarkdown>
