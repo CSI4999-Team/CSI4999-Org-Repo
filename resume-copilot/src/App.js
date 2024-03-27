@@ -182,117 +182,132 @@ function App() {
           </div>
           <main className="App-main">
             <LeftBar isOpen={sidebarOpen} />
-            <h3 className="Welcome-Words">Welcome to</h3>
-            <h1 className="Resume-Title">Resume Co-Pilot</h1>
-            <div className="transition-container">
-              <TransitionGroup component={null}>
-                {currentStep === 1 && !inputMethod && (
-                  <CSSTransition
-                    key={currentStep}
-                    timeout={1000}
-                    classNames="fade"
-                  >
-                    {renderInputChoice()}
-                  </CSSTransition>
-                )}
-                {currentStep === 2 && (
-                  <CSSTransition
-                    key="inputChoice"
-                    timeout={1000}
-                    classNames="fade"
-                  >
-                    <div>
-                      {inputMethod === "url" && (
-                        <div>
-                          <input
-                            className="urlInput"
-                            type="text"
-                            placeholder="Enter URL here"
-                          />
-                          <button
-                            onClick={() => {
-                              alert(
-                                "To use the URL scraping feature is currently unavailable. Please manually copy-paste your job description."
-                              );
-                              handleBack(); // Redirect back to the main page or step
-                            }}
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      )}
-                      {inputMethod === "description" && (
-                        <div>
-                          <form onSubmit={handleSubmit}>
-                            <textarea
-                              placeholder="Paste job description here"
-                              value={jobDescription}
-                              onChange={handleDescriptionChange}
-                            />
-                            <button type="submit" className="submit-button">
-                              Submit
-                            </button>
-                          </form>
-                        </div>
-                      )}
-                      {inputMethod === "general" && !confirmSkip && (
-                        <CSSTransition
-                          key="confirmSkip"
-                          timeout={1000}
-                          classNames="fade"
-                        >
+            <div
+              className="exp"
+              style={{
+                backgroundColor: "#23272e",
+                padding: "30px",
+                borderRadius: "10px",
+                textAlign: "center",
+                justifyContent: "center",
+              }}
+            >
+              <h3 className="Welcome-Words">Welcome to</h3>
+              <h1 className="Resume-Title">Resume Co-Pilot</h1>
+              <div className="transition-container">
+                <TransitionGroup component={null}>
+                  {currentStep === 1 && !inputMethod && (
+                    <CSSTransition
+                      key={currentStep}
+                      timeout={1000}
+                      classNames="fade"
+                    >
+                      {renderInputChoice()}
+                    </CSSTransition>
+                  )}
+                  {currentStep === 2 && (
+                    <CSSTransition
+                      key="inputChoice"
+                      timeout={1000}
+                      classNames="fade"
+                    >
+                      <div>
+                        {inputMethod === "url" && (
                           <div>
-                            <p>
-                              Are you sure you want to proceed without specific
-                              job details? You will receive general feedback on
-                              your resume.
-                            </p>
+                            <input
+                              className="urlInput"
+                              type="text"
+                              placeholder="Enter URL here"
+                            />
                             <button
                               onClick={() => {
-                                setConfirmSkip(true);
-                                setCurrentStep(3);
+                                alert(
+                                  "To use the URL scraping feature is currently unavailable. Please manually copy-paste your job description."
+                                );
+                                handleBack(); // Redirect back to the main page or step
                               }}
                             >
-                              Yes, proceed
+                              Submit
                             </button>
                           </div>
-                        </CSSTransition>
-                      )}
-                      <button className="back-button" onClick={handleBack}>
-                        Back
-                      </button>
-                    </div>
-                  </CSSTransition>
-                )}
-                {currentStep === 3 && !analysisResult && (
-                  <CSSTransition
-                    key={isUploading ? "loading" : "uploadForm"}
-                    timeout={1000}
-                    classNames="fade"
-                  >
-                    <div>
-                      {!isUploading ? (
-                        <UploadForm
-                          onAnalysisComplete={handleAnalysisComplete}
-                          onStartUploading={startUploading}
-                          jobDescription={jobDescription}
-                          confirmSkip={confirmSkip}
-                        />
-                      ) : (
-                        // TODO: Make Dynamic Loading Screen
-                        <div>Loading...</div> // Transition smooth to Loading... static
-                      )}
-                    </div>
-                  </CSSTransition>
-                )}
-                {currentStep === 3 && analysisResult && (
-                  <CSSTransition key="results" timeout={1000} classNames="fade">
-                    <div className="analysisResultMarkdownContainer">
-                      <ReactMarkdown>{analysisResult}</ReactMarkdown>
-                    </div>
-                  </CSSTransition>
-                )}
-              </TransitionGroup>
+                        )}
+                        {inputMethod === "description" && (
+                          <div>
+                            <form onSubmit={handleSubmit}>
+                              <textarea
+                                placeholder="Paste job description here"
+                                value={jobDescription}
+                                onChange={handleDescriptionChange}
+                              />
+                              <button type="submit" className="submit-button">
+                                Submit
+                              </button>
+                            </form>
+                          </div>
+                        )}
+                        {inputMethod === "general" && !confirmSkip && (
+                          <CSSTransition
+                            key="confirmSkip"
+                            timeout={1000}
+                            classNames="fade"
+                          >
+                            <div>
+                              <p>
+                                Are you sure you want to proceed without
+                                specific job details? You will receive general
+                                feedback on your resume.
+                              </p>
+                              <button
+                                onClick={() => {
+                                  setConfirmSkip(true);
+                                  setCurrentStep(3);
+                                }}
+                              >
+                                Yes, proceed
+                              </button>
+                            </div>
+                          </CSSTransition>
+                        )}
+                        <button className="back-button" onClick={handleBack}>
+                          Back
+                        </button>
+                      </div>
+                    </CSSTransition>
+                  )}
+                  {currentStep === 3 && !analysisResult && (
+                    <CSSTransition
+                      key={isUploading ? "loading" : "uploadForm"}
+                      timeout={1000}
+                      classNames="fade"
+                    >
+                      <div>
+                        {!isUploading ? (
+                          <UploadForm
+                            onAnalysisComplete={handleAnalysisComplete}
+                            onStartUploading={startUploading}
+                            jobDescription={jobDescription}
+                            confirmSkip={confirmSkip}
+                          />
+                        ) : (
+                          // TODO: Make Dynamic Loading Screen
+                          <div>Loading...</div> // Transition smooth to Loading... static
+                        )}
+                      </div>
+                    </CSSTransition>
+                  )}
+                  {currentStep === 3 && analysisResult && (
+                    <CSSTransition
+                      key="results"
+                      timeout={1000}
+                      classNames="fade"
+                    >
+                      <div className="analysisResultMarkdownContainer">
+                        <ReactMarkdown>{analysisResult}</ReactMarkdown>
+                      </div>
+                    </CSSTransition>
+                  )}
+                </TransitionGroup>
+              </div>
             </div>
           </main>
         </div>
