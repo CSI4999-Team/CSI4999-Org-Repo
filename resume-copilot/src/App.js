@@ -182,7 +182,8 @@ function App() {
           </div>
           <main className="App-main">
             <LeftBar isOpen={sidebarOpen} />
-            <h1>Resume Co-Pilot</h1>
+            <h3 className="Welcome-Words">Welcome to</h3>
+            <h1 className="Resume-Title">Resume Co-Pilot</h1>
             <div className="transition-container">
               <TransitionGroup component={null}>
                 {currentStep === 1 && !inputMethod && (
