@@ -335,6 +335,10 @@ button {
   /* Ensures the container doesn't constrain button width */
 }
 
+.main-choices-2 {
+
+}
+
 .main-choices {
   display: flex;
   justify-content: center;
@@ -343,7 +347,7 @@ button {
 }
 
 .choice-button {
-  border: 2px solid #ffffff;
+  border: 3.5px solid #ffffff;
   /* Example border color */
   padding: 10px 20px;
   /* Adjust padding as needed */
@@ -357,6 +361,7 @@ button {
   background-color: rgba(255, 255, 255, 0.5);
   /* Semi-transparent background */
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* box-shadow: 0 0 0 2px #282c34 inset; */
 }
 
 .choice-button.left {
@@ -385,7 +390,7 @@ button {
   /* Text color */
   background-color: rgba(255, 255, 255, 0.7);
   /* Slightly more opaque than choice buttons */
-  border: 2px solid #ffffff;
+  border: 3.5px solid #ffffff;
   border-radius: 50px;
   /* Fully rounded edges */
   transition: background-color 0.3s ease, color 0.3s ease;

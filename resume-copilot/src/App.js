@@ -117,25 +117,27 @@ function App() {
   const renderInputChoice = () => {
     return (
       <div className="choices-container">
-        <div className="main-choices">
-          <button
-            className="choice-button left"
-            onClick={() => {
-              setInputMethod("url");
-              setCurrentStep(2);
-            }}
-          >
-            Use a URL
-          </button>
-          <button
-            className="choice-button right"
-            onClick={() => {
-              setInputMethod("description");
-              setCurrentStep(2);
-            }}
-          >
-            Copy Paste a Job Description
-          </button>
+        <div className="main-choices-2">
+          <div className="main-choices">
+            <button
+              className="choice-button left"
+              onClick={() => {
+                setInputMethod("url");
+                setCurrentStep(2);
+              }}
+            >
+              Use a URL
+            </button>
+            <button
+              className="choice-button right"
+              onClick={() => {
+                setInputMethod("description");
+                setCurrentStep(2);
+              }}
+            >
+              Copy Paste a Job Description
+            </button>
+          </div>
         </div>
         <div className="skip-choice">
           <button
