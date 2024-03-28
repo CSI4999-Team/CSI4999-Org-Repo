@@ -6,6 +6,8 @@ import openai
 import os
 import fitz  # PyMuPDF for PDF processing
 import base64
+import io
+import re
 from utils.vault_util import *
 
 # Load environment variables
@@ -49,7 +51,6 @@ client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @csrf_exempt
 def analyze_resume(request):
-    print('analyze_resume')
     if request.method == 'POST':
         try:
             # Retrieve the resume text from the session or other storage
@@ -86,8 +87,57 @@ def analyze_resume(request):
 
                 return JsonResponse({'response': response_text})
             else:
-                pdfFile = base64.b64decode(pdfBase64)
-                return HttpResponse(pdfFile, content_type='application/pdf')
+                try:
+                    pdfFile = base64.b64decode(pdfBase64)
+                    doc = fitz.open(stream=io.BytesIO(pdfFile), filetype='pdf')
+                    resumeText = ''
+                    for page in doc:
+                        resumeText += page.get_text()
+
+                    chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": "Based on this job description: \"" + job_desc + "\" and this resume: \"" + resumeText + "\" I need you to give me a list of words in the resume that match favorably to the job description. Output one word on each line wrapped in quotes"},
+                    ],
+                    model="gpt-3.5-turbo",
+                    )
+                    response_text = chat_completion.choices[0].message.content.strip()
+                    goodWords = extract_quoted_words(response_text)
+
+                    highlightedWords = set()
+
+                    for page in doc:
+                        for word in goodWords:
+                            for matchedWord in page.search_for(word):
+                                if matchedWord not in highlightedWords:
+                                    page.add_highlight_annot(matchedWord).set_colors({'stroke': (0, 1, 0)})
+                                    highlightedWords.add(matchedWord)
+
+                    chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": "Based on this job description: \"" + job_desc + "\" and this resume: \"" + resumeText + "\" I need you to give me a list of words in the resume that you think are irrelevant to the job description. Output one word on each line wrapped in quotes"},
+                    ],
+                    model="gpt-3.5-turbo",
+                    )
+                    response_text = chat_completion.choices[0].message.content.strip()
+                    badWords = extract_quoted_words(response_text)
+
+                    badWords = subtract_lists(badWords, goodWords)
+
+                    for page in doc:
+                        for word in badWords:
+                            for matchedWord in page.search_for(word):
+                                if matchedWord not in highlightedWords:
+                                    page.add_highlight_annot(matchedWord).set_colors({'stroke': (1, 0, 0)})
+                                    highlightedWords.add(matchedWord)
+
+                    doc.save('/Users/james/Desktop/mynewpdf.pdf')
+                    modified_pdf = io.BytesIO()
+                    doc.save(modified_pdf)
+                    doc.close()
+                    modified_pdf.seek(0)
+                    return HttpResponse(modified_pdf.read(), content_type='application/pdf')
+                except Exception as e:
+                    print('the error is!!!! ' + str(e))
         except openai.RateLimitError:
             return JsonResponse({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
         except openai.OpenAIError as e:
@@ -96,3 +146,12 @@ def analyze_resume(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+def extract_quoted_words(text):
+    pattern = r'"([^"]+)"'
+    quoted_words = re.findall(pattern, text)
+    
+    return quoted_words
+
+def subtract_lists(list1, list2):
+    return [item for item in list1 if item not in list2]
