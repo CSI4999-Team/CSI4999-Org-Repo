@@ -222,7 +222,7 @@ button {
 /* Sidebar toggle button */
 .toggle-button {
   position: fixed;
-  top: 25%;
+  top: 19%;
   transform: translateY(-50%);
   background-color: #fff;
   border: 1px solid #ccc;
@@ -235,6 +235,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 8px; /* Adjust the size as needed */
 }
 
 .toggle-button:hover {
