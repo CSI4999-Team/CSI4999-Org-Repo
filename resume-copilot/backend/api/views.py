@@ -130,7 +130,6 @@ def analyze_resume(request):
                                     page.add_highlight_annot(matchedWord).set_colors({'stroke': (1, 0, 0)})
                                     highlightedWords.add(matchedWord)
 
-                    doc.save('/Users/james/Desktop/mynewpdf.pdf')
                     modified_pdf = io.BytesIO()
                     doc.save(modified_pdf)
                     doc.close()
