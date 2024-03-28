@@ -43,27 +43,33 @@ function UploadForm({ onAnalysisComplete, setPdfBlob, onStartUploading, jobDescr
       const resumeText = parseData.extracted_text;
 
       // Step 2: Analyze the extracted resume text
-      const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          resume_text: resumeText,
-          confirm_skip: confirmSkip,
-          job_desc: jobDescription,
-          output_method: outputMethod
-         }),
-      });
-
-      if (outputMethod == 'text') {
-        const analyzeData = await analyzeResponse.json();
-        // Call the callback with the analysis result
-        onAnalysisComplete(analyzeData.response);
-      } else {
-        const pdfBlob = await analyzeResponse.blob();
-        setPdfBlob(pdfBlob)
+      const fileReader = new FileReader();
+      fileReader.onload = async function(event) {
+        const pdfBase64 = event.target.result.split(',')[1];
+        const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            resume_text: resumeText,
+            confirm_skip: confirmSkip,
+            job_desc: jobDescription,
+            output_method: outputMethod,
+            pdf_base64: pdfBase64
+          }),
+        });
+        
+        if (outputMethod == 'text') {
+          const analyzeData = await analyzeResponse.json();
+          // Call the callback with the analysis result
+          onAnalysisComplete(analyzeData.response);
+        } else {
+          const pdfBlob = await analyzeResponse.blob();
+          setPdfBlob(pdfBlob)
+        }
       }
+      fileReader.readAsDataURL(file);
 
     } catch (error) {
       console.error("Error during file upload:", error);

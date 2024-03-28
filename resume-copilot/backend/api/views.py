@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import openai
 import os
 import fitz  # PyMuPDF for PDF processing
+import base64
 from utils.vault_util import *
 
 # Load environment variables
@@ -56,31 +57,37 @@ def analyze_resume(request):
             resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
             user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
             output_method = data.get('output_method', '')
+            pdfBase64 = data.get('pdf_base64')
 
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
             job_desc = data.get('job_desc', '')
 
-            if confirm_skip:
-                # If user chooses to skip, assign a custom prompt to job_description
-                job_description = "The user has not provided a specific job description and has opted for general feedback. Please begin your expert response with 'Having opted for general feedback, ...'"
+            if output_method == 'text':
+
+                if confirm_skip:
+                    # If user chooses to skip, assign a custom prompt to job_description
+                    job_description = "The user has not provided a specific job description and has opted for general feedback. Please begin your expert response with 'Having opted for general feedback, ...'"
+                else:
+                    # Otherwise, use the provided job description
+                    job_description = job_desc
+                    
+                # Make a single request to the OpenAI API using the user message
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": "You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. Please provide some tailored feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, there will be a generic feedback message."},
+                        {"role": "user", "content": resume_text},  # Resume text as context
+                        {"role": "user", "content": job_description}
+                    ],
+                    model="gpt-3.5-turbo",
+                )
+
+                # Ensure the response is in text format
+                response_text = chat_completion.choices[0].message.content.strip()
+
+                return JsonResponse({'response': response_text})
             else:
-                # Otherwise, use the provided job description
-                job_description = job_desc
-                
-            # Make a single request to the OpenAI API using the user message
-            chat_completion = client.chat.completions.create(
-                messages=[
-                    {"role": "system", "content": "You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. Please provide some tailored feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, there will be a generic feedback message."},
-                    {"role": "user", "content": resume_text},  # Resume text as context
-                    {"role": "user", "content": job_description}
-                ],
-                model="gpt-3.5-turbo",
-            )
-
-            # Ensure the response is in text format
-            response_text = chat_completion.choices[0].message.content.strip()
-
-            return JsonResponse({'response': response_text})
+                pdfFile = base64.b64decode(pdfBase64)
+                return HttpResponse(pdfFile, content_type='application/pdf')
         except openai.RateLimitError:
             return JsonResponse({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
         except openai.OpenAIError as e:
