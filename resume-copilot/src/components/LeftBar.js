@@ -42,25 +42,10 @@ const LeftBar = ({ isOpen }) => {
       <ul>
         {oldResumeSuggestions.map((resume, index) => (
           <li key={index}>
-            <button>{resume.title}</button>
+            <button className="ResButtons">{resume.title}</button>
           </li>
         ))}
       </ul>
-      {/* <div
-        className="toggle-button"
-        onClick={toggleSidebar}
-        style={{
-          position: "absolute",
-          right: isOpen || sidebarOpen ? -20 : -20, // Adjust the value as needed
-          zIndex: 999, // Ensure it's on top of the left bar
-          cursor: "pointer",
-          backgroundColor: "#fff", // Example background color
-          padding: "10px",
-          borderRadius: "0 5px 5px 0", // Rounded corner on the left side
-        }}
-      >
-        P
-      </div> */}
     </motion.div>
   );
 };

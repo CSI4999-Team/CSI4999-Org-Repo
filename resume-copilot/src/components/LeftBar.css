@@ -16,4 +16,23 @@ h2 {
     display: flex;
     justify-content: center;
     /* Horizontally center */
+    margin: 30px;
+}
+
+ul {
+    list-style-type: none;
+    /* Removes the bullet points */
+    padding: 10px;
+    /* Removes default padding */
+    margin: 10px;
+    /* Removes default margin */
+}
+
+.ResButtons {
+    padding: 10px;
+    width: 225px;
+    background-color: #23272e;
+    outline-color: white;
+    outline-width: 10px;
+    width: 100%;
 }

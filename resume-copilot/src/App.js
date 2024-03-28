@@ -141,10 +141,28 @@ const handleSkip = () => {
               )}
             </div>
           </header>
-          <div className="toggle-button" onClick={toggleSidebar}></div>
+          <div className="toggle-button" onClick={toggleSidebar}>
+            <img
+              src="./arrow-right.svg"
+              alt="An arrow"
+              style={{ transform: sidebarOpen ? "scaleX(-1)" : "scaleX(1)" }}
+            />
+          </div>
           <main className="App-main">
             <LeftBar isOpen={sidebarOpen} />
-            <h1>Resume Co-Pilot</h1>
+            <div
+              className="exp"
+              style={{
+                backgroundColor: "#23272e",
+                padding: "30px",
+                borderRadius: "10px",
+                textAlign: "center",
+                justifyContent: "center",
+              }}
+            >
+              <h3 className="Welcome-Words">Welcome to</h3>
+              <h1 className="Resume-Title">Resume Co-Pilot</h1>
+            </div>
             <div className="transition-container">
             <TransitionGroup component={null}>
               {currentStep === 1 && !inputMethod && (
