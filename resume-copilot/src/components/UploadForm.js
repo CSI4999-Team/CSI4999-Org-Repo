@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./UploadForm.css";
 
-function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, confirmSkip, outputMethod }) {
+function UploadForm({ onAnalysisComplete, setPdfBlob, onStartUploading, jobDescription, confirmSkip, outputMethod }) {
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const fileInputRef = useRef(null);
@@ -55,10 +55,16 @@ function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, conf
           output_method: outputMethod
          }),
       });
-      const analyzeData = await analyzeResponse.json();
 
-      // Call the callback with the analysis result
-      onAnalysisComplete(analyzeData.response);
+      if (outputMethod == 'text') {
+        const analyzeData = await analyzeResponse.json();
+        // Call the callback with the analysis result
+        onAnalysisComplete(analyzeData.response);
+      } else {
+        const pdfBlob = await analyzeResponse.blob();
+        setPdfBlob(pdfBlob)
+      }
+
     } catch (error) {
       console.error("Error during file upload:", error);
     }

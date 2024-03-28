@@ -19,6 +19,7 @@ function App() {
   const [inputMethod, setInputMethod] = useState(null); // 'url' or 'description'
   const [outputMethod, setOutputMethod] = useState(null); // 'text' or 'overlay'
   const [confirmSkip, setConfirmSkip] = useState(false); // New state to track confirmation of skip
+  const [pdfBlob, setPdfBlob] = useState(null);
 
 
 
@@ -213,7 +214,7 @@ const handleSkip = () => {
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
-                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip} outputMethod={outputMethod}/>
+                      <UploadForm onAnalysisComplete={handleAnalysisComplete} setPdfBlob={setPdfBlob} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip} outputMethod={outputMethod}/>
                     ) : (
                       // TODO: Make Dynamic Loading Screen
                       <div>Loading...</div> // Transition smooth to Loading... static
@@ -221,12 +222,17 @@ const handleSkip = () => {
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 4 && analysisResult && (
+              {currentStep === 4 && outputMethod == 'text' && analysisResult && (
                 <CSSTransition key="results" timeout={1000} classNames="fade">
                   <div className="analysisResultMarkdownContainer">
                     <ReactMarkdown>{analysisResult}</ReactMarkdown>
                   </div>
                 </CSSTransition>
+              )}
+              {currentStep === 4 && outputMethod === 'overlay' && pdfBlob && (
+                <object type="application/pdf" data={URL.createObjectURL(pdfBlob)} width="100%" height="500" aria-label="Uploaded PDF preview">
+                PDF Viewer not available. You can download the file <a href={URL.createObjectURL(pdfBlob)} download>here</a>.
+                </object>
               )}
             </TransitionGroup>
             </div>
