@@ -1,5 +1,6 @@
 import React from 'react';
-import './PrivacyPolicy.css';
+import "./TipsAndTricks.css";
+//import LeftBar from "./LeftBar";
 
 function tipsandtricks(){
 return(
@@ -18,10 +19,14 @@ return(
         <p>Any education pertaining to your career field should be listed be sure to include the school name, location, your time span spent there, and your degree.
         Any training you've completed for certifications or other projects can be included.   </p>
         <li>Experience</li>
+        <p>Make sure that you are putting in job experiences that are relevant to the position that you are applying to. </p>
         <li>Activities and affiliations</li>
+        <p>Here you can put if you know any different languages, have any certifications, or any clubs you have been a part of.</p>
         <li>Honors and awards</li>
+        <p>Here you will put your various academic accomplishments, Industry awards, Department awards, and Community awards.</p>
     </ul>
-    <p>Now that you know what you need lets </p>
+    <br/>
+    <h1>Now that you know what you need lets </h1>
     </div>
 );
 }
