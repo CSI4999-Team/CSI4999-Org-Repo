@@ -1,15 +1,35 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useTransform, useScroll } from "framer-motion";
 import "./LeftBar.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
-const LeftBar = ({ isOpen }) => {
+const LeftBar = ({ isOpen, user }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const targetRef = useRef(null);
-
   const { scrollXProgress } = useScroll({
     target: targetRef,
     axis: "x",
   });
+  const [userHistory, setUserHistory] = useState([]);
+
+  useEffect(() => {
+    if (user && user.sub) {
+      const fetchUserHistory = async () => {
+        try {
+          const response = await fetch(`/api/user-data/${user.sub}/`);
+          if (response.ok) {
+            const historyData = await response.json();
+            setUserHistory(historyData);
+          } else {
+            throw new Error('Failed to fetch user history');
+          }
+        } catch (error) {
+          console.error('Error fetching user history:', error);
+        }
+      };
+      fetchUserHistory();
+    }
+  }, [user]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -17,20 +37,10 @@ const LeftBar = ({ isOpen }) => {
 
   const x = useTransform(scrollXProgress, [0, 1], ["1%", "-95%"]);
 
-  const oldResumeSuggestions = [
-    {
-      title: "Resume suggestion 1",
-      chatSuggestions: ["Chat suggestion 1", "Chat suggestion 2"],
-    },
-    {
-      title: "Resume suggestion 2",
-      chatSuggestions: ["Chat suggestion 3", "Chat suggestion 4"],
-    },
-    {
-      title: "Resume suggestion 3",
-      chatSuggestions: ["Chat suggestion 5", "Chat suggestion 6"],
-    },
-  ];
+  const handleHistoryItemClick = (entry) => {
+    // Handle the click on the history entry
+    console.log('Clicked on history entry:', entry);
+  };
 
   return (
     <motion.div
@@ -38,14 +48,20 @@ const LeftBar = ({ isOpen }) => {
       className={`left-bar ${isOpen || sidebarOpen ? "open" : ""}`}
       style={{ x, backgroundColor: "#282C34" }}
     >
-      <h2 className="prevRes">History</h2>
-      <ul>
-        {oldResumeSuggestions.map((resume, index) => (
-          <li key={index}>
-            <button className="ResButtons">{resume.title}</button>
-          </li>
-        ))}
-      </ul>
+      <h2 className="prevRes">User History</h2>
+      {userHistory.length > 0 ? (
+        <ul>
+          {userHistory.map((entry, index) => (
+            <li key={index}>
+              <button className="ResButtons" onClick={() => handleHistoryItemClick(entry)}>
+                {entry.job_description ? entry.job_description : 'General Feedback'}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No history available or still loading...</p>
+      )}
     </motion.div>
   );
 };

@@ -22,6 +22,7 @@ function App() {
   const [loadingPercentage, setLoadingPercentage] = useState(0);
   const [phase, setPhase] = useState(1); // 1 for first loading phase, 2 for second
   const [showLoadingBar, setShowLoadingBar] = useState(true); // Show or hide the loading bar
+  const [userHistory, setUserHistory] = useState([]);
 
   /* Functions */
 
@@ -201,7 +202,7 @@ const handleSkip = () => {
             />
           </div>
           <main className="App-main">
-            <LeftBar isOpen={sidebarOpen} />
+          <LeftBar isOpen={sidebarOpen} userHistory={userHistory} />
             <div
               className="exp"
               style={{
