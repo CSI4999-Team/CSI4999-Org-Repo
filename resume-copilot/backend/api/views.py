@@ -5,11 +5,32 @@ from django.views.decorators.csrf import csrf_exempt
 import openai
 import os
 import fitz  # PyMuPDF for PDF processing
+from django.http import JsonResponse
+from .forms import *
+from .models import *
 from utils.vault_util import *
 
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
+
+def get_user_data(request, auth0_id):
+    try:
+        user_data_list = UserData.objects.filter(auth0_id=auth0_id)
+        if user_data_list.exists():
+            data = [
+                {
+                    'job_description': user_data.job_description,
+                    'resume_text': user_data.resume_text,
+                    'recommendation_text': user_data.recommendation_text
+                } for user_data in user_data_list
+            ]
+            return JsonResponse(data, safe=False)  # `safe=False` is needed when returning a list
+        else:
+            return JsonResponse({'message': 'No user data found'}, status=404)
+    except Exception as e:
+        logger.error(f"Unexpected error occurred: {str(e)}")
+        return JsonResponse({'error': 'Internal server error'}, status=500)
 
 def get_openai_api_key():
     hcp_api_token = get_hcp_api_token()
@@ -54,9 +75,11 @@ def analyze_resume(request):
             data = json.loads(request.body)  # Correctly load the JSON data sent from the frontend
             resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
             user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
-
+        
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
             job_desc = data.get('job_desc', '')
+            user_id = data.get('user_id', '')
+            print(user_id) #remove after implementation 
 
             if confirm_skip:
                 # If user chooses to skip, assign a custom prompt to job_description
@@ -65,6 +88,14 @@ def analyze_resume(request):
                 # Otherwise, use the provided job description
                 job_description = job_desc
                 
+            # Create a new UserData entry
+            user_data = UserData.objects.create(
+                auth0_id=user_id,
+                job_description=job_description,
+                resume_text=resume_text
+            )
+            user_data.save()
+
             # Make a single request to the OpenAI API using the user message
             chat_completion = client.chat.completions.create(
                 messages=[
@@ -77,6 +108,12 @@ def analyze_resume(request):
 
             # Ensure the response is in text format
             response_text = chat_completion.choices[0].message.content.strip()
+
+            # Update the user data with the recommendation
+            user_data.recommendation_text = response_text
+            user_data.job_description = job_desc
+            user_data.save()
+
 
             return JsonResponse({'response': response_text})
         except openai.RateLimitError:

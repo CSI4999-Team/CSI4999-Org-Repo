@@ -7,15 +7,19 @@ import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import "./App.css";
+<<<<<<< HEAD
 // Import pages from components
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
 
+=======
+import UserProfile from "./components/UserProfile"
+>>>>>>> main
 
 function App() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");
@@ -25,10 +29,62 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [inputMethod, setInputMethod] = useState(null); // 'url' or 'description'
   const [confirmSkip, setConfirmSkip] = useState(false); // New state to track confirmation of skip
-
-
+  const [loadingPercentage, setLoadingPercentage] = useState(0);
+  const [phase, setPhase] = useState(1); // 1 for first loading phase, 2 for second
+  const [showLoadingBar, setShowLoadingBar] = useState(true); // Show or hide the loading bar
+  const [userHistory, setUserHistory] = useState([]);
 
   /* Functions */
+
+  useEffect(() => {
+    if (!isUploading) {
+      setShowLoadingBar(false); // Hide the loading bar if not uploading
+      return;
+    }
+  
+    setShowLoadingBar(true); // Show the loading bar when uploading starts
+    let progress = 0;
+  
+    const updateProgress = () => {
+      progress += 5;
+      setLoadingPercentage(progress);
+  
+      if (progress < 100) {
+        setTimeout(updateProgress, 100); // Continue incrementing
+      } else if (progress === 100) {
+        // Once progress reaches 100, proceed based on the phase
+        if (phase < 2) {
+          // Transition to the second phase after a brief moment to visibly show 100%
+          setTimeout(() => {
+            setPhase(phase + 1); // Move to the next phase
+            setShowLoadingBar(false); // Optionally hide the bar before starting the second phase
+            setTimeout(() => {
+              setLoadingPercentage(0); // Reset progress for the second phase
+              setShowLoadingBar(true); // Show the loading bar for the second phase
+            }, 500); // Short delay before starting the second phase
+          }, 500); // Time to wait with the bar filled at 100% before resetting
+        } else if (phase === 2) {
+          // Handle completion after showing 100% filled for a brief moment
+          setTimeout(() => {
+            setPhase(3); // Indicate completion
+            setShowLoadingBar(false); // Hide loading bar as we display "Almost there"
+          }, 500);
+        }
+      }
+    };
+  
+    // Start the progress update loop
+    updateProgress();
+  
+    // Cleanup function to clear any ongoing timeouts if the component unmounts
+    return () => {
+      setShowLoadingBar(false);
+      setLoadingPercentage(0);
+    };
+  }, [isUploading, phase]);
+  
+  
+  
 
   /* BACK BUTTON FUNCTIONALITY */
   const handleBack = () => {
@@ -157,13 +213,36 @@ const handleSkip = () => {
               )}
             </div>
           </header>
-          <div className="toggle-button" onClick={toggleSidebar}></div>
+          <div className="toggle-button" onClick={toggleSidebar}>
+            <img
+              src="./arrow-right.svg"
+              alt="An arrow"
+              style={{ transform: sidebarOpen ? "scaleX(-1)" : "scaleX(1)" }}
+            />
+          </div>
           <main className="App-main">
+<<<<<<< HEAD
           <Routes>
           <Route path="/" element={
              <>
             <LeftBar isOpen={sidebarOpen} />
             <h1>Resume Co-Pilot</h1>
+=======
+          <LeftBar isOpen={sidebarOpen} userHistory={userHistory} />
+            <div
+              className="exp"
+              style={{
+                backgroundColor: "#282c34",
+                padding: "30px",
+                borderRadius: "10px",
+                textAlign: "center",
+                justifyContent: "center",
+              }}
+            >
+              <h3 className="Welcome-Words">Welcome to</h3>
+              <h1 className="Resume-Title">Resume Co-Pilot</h1>
+            </div>
+>>>>>>> main
             <div className="transition-container">
             <TransitionGroup component={null}>
               {currentStep === 1 && !inputMethod && (
@@ -217,8 +296,23 @@ const handleSkip = () => {
                     {!isUploading ? (
                       <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip}/>
                     ) : (
-                      // TODO: Make Dynamic Loading Screen
-                      <div>Loading...</div> // Transition smooth to Loading... static
+                      // Dynamic Loading Screen
+                      <div className="loading-screen">
+                      {showLoadingBar && (
+                        <>
+                          <div className="progress-bar-container">
+                            <div className="progress-bar" style={{ width: `${loadingPercentage}%` }}></div>
+                          </div>
+                          <div className="progress-text">
+                            {phase === 1 && "Resume Co-Pilot is Analyzing - " + loadingPercentage + "%"}
+                            {phase === 2 && "Resume Co-Pilot is Reading - " + loadingPercentage + "%"}
+                          </div>
+                        </>
+                      )}
+                      {phase === 3 && (
+                        <div className="progress-text">Almost there</div>
+                      )}
+                    </div>
                     )}
                   </div>
                 </CSSTransition>
