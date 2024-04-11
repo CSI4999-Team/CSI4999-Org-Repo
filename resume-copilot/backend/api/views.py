@@ -69,18 +69,15 @@ def analyze_resume(request):
             else:
                 # Otherwise, use the provided job description
                 job_description = job_desc
-
-            # Check if user data exists, create a new one if not
-            try:
-                user_data = UserData.objects.get(auth0_id=user_id)
-            except UserData.DoesNotExist:
-                user_data = UserData(
-                    auth0_id=user_id,
-                    resume_text=resume_text,
-                    job_description=job_desc
-                )
-                user_data.save()
                 
+            # Create a new UserData entry
+            user_data = UserData.objects.create(
+                auth0_id=user_id,
+                job_description=job_description,
+                resume_text=resume_text
+            )
+            user_data.save()
+
             # Make a single request to the OpenAI API using the user message
             chat_completion = client.chat.completions.create(
                 messages=[
@@ -96,6 +93,7 @@ def analyze_resume(request):
 
             # Update the user data with the recommendation
             user_data.recommendation_text = response_text
+            user_data.job_description = job_desc
             user_data.save()
 
 
