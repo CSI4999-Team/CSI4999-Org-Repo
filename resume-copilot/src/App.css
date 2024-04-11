@@ -409,13 +409,14 @@ margin: px;
 }
 
 .link{
-  margin: 10px;
+  margin: 20px;
   text-decoration: none;
   color: white;
 }
 
 .link:hover{
-  background-color: #ddd;
-  border-radius: 5px;
+  background-color: rgb(41, 41, 133);
+  border-radius: 2px;
+  padding: 5px;
 }
 

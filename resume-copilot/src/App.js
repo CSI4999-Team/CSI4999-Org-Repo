@@ -11,6 +11,7 @@ import "./App.css";
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import TipsAndTricks from './components/TipsAndTricks';
+import AboutUs from './components/AboutUs';
 
 
 function App() {
@@ -141,6 +142,7 @@ const handleSkip = () => {
                 {/* Updated navigation links */}
                 <Link className="link"to="/">Home</Link>
                 <Link className="link"to="/tips-and-tricks">Tips and Tricks</Link>
+                <Link className="link"to="/about-us">About the Creators</Link>
                 <Link className="link"to="/privacy-policy">Privacy Policy</Link>
                 <Link className="link"to="/terms-and-conditions">Terms and Conditions</Link>
               </nav>
@@ -235,6 +237,7 @@ const handleSkip = () => {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/tips-and-tricks" element={<TipsAndTricks />} />
+            <Route path="/about-us" element={<AboutUs />}/>
           </Routes>
           </main>
         </div>

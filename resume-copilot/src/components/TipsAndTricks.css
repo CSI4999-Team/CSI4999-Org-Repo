@@ -3,5 +3,19 @@ h1 {
     font-size: 35px;
 }
 li {
-   color: #1DB8D4; 
+   color: #1DB8D4;
+   font-size: 25px; 
+}
+.facts{
+    color: white;
+    text-align: center;
+    font-size: 18px;
+}
+.description{
+    text-align: center;
+    font-size: 25px;
+}
+.explanation {
+    font-size: 18px;
+
 }
