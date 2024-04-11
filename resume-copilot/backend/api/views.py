@@ -7,6 +7,7 @@ import os
 import fitz  # PyMuPDF for PDF processing
 from django.http import JsonResponse
 from .forms import *
+from .models import *
 from utils.vault_util import *
 
 # Load environment variables
@@ -68,6 +69,17 @@ def analyze_resume(request):
             else:
                 # Otherwise, use the provided job description
                 job_description = job_desc
+
+            # Check if user data exists, create a new one if not
+            try:
+                user_data = UserData.objects.get(auth0_id=user_id)
+            except UserData.DoesNotExist:
+                user_data = UserData(
+                    auth0_id=user_id,
+                    resume_text=resume_text,
+                    job_description=job_desc
+                )
+                user_data.save()
                 
             # Make a single request to the OpenAI API using the user message
             chat_completion = client.chat.completions.create(
@@ -81,6 +93,11 @@ def analyze_resume(request):
 
             # Ensure the response is in text format
             response_text = chat_completion.choices[0].message.content.strip()
+
+            # Update the user data with the recommendation
+            user_data.recommendation_text = response_text
+            user_data.save()
+
 
             return JsonResponse({'response': response_text})
         except openai.RateLimitError:
