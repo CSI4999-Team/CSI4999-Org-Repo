@@ -424,7 +424,6 @@ button {
   /* Slightly darker on hover */
 }
 
-<<<<<<< HEAD
 .pagelinks{
 margin: px;
 }
@@ -439,13 +438,12 @@ margin: px;
   background-color: rgb(41, 41, 133);
   border-radius: 2px;
   padding: 5px;
-=======
+}
 /* Welcoming title styling */
 
 .Welcome-Words {
   padding: 0px;
   margin-bottom: 0px;
->>>>>>> main
 }
 
 .Resume-Title {

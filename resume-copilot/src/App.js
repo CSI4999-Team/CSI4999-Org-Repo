@@ -7,16 +7,13 @@ import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import "./App.css";
-<<<<<<< HEAD
 // Import pages from components
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
 
-=======
 import UserProfile from "./components/UserProfile"
->>>>>>> main
 
 function App() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
@@ -221,13 +218,9 @@ const handleSkip = () => {
             />
           </div>
           <main className="App-main">
-<<<<<<< HEAD
           <Routes>
           <Route path="/" element={
              <>
-            <LeftBar isOpen={sidebarOpen} />
-            <h1>Resume Co-Pilot</h1>
-=======
           <LeftBar isOpen={sidebarOpen} userHistory={userHistory} />
             <div
               className="exp"
@@ -242,7 +235,6 @@ const handleSkip = () => {
               <h3 className="Welcome-Words">Welcome to</h3>
               <h1 className="Resume-Title">Resume Co-Pilot</h1>
             </div>
->>>>>>> main
             <div className="transition-container">
             <TransitionGroup component={null}>
               {currentStep === 1 && !inputMethod && (
