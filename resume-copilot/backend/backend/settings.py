@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # CORS headers allows our React app to make requests to your Django back end -> Cross-Origin Resource Sharing (CORS) 
-    'corsheaders'
+    'corsheaders',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -80,8 +81,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # Changed to MySQL backend
+        'NAME': 'defaultdb',  # Your database name
+        'USER': 'doadmin',  # Your database username
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),  # Your database password, fetched from environment
+        'HOST': 'db-mysql-nyc3-rcp-do-user-16037400-0.c.db.ondigitalocean.com',  # Your database host
+        'PORT': '25060',  # Your database port
     }
 }
 

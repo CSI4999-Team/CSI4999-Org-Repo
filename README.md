@@ -55,6 +55,7 @@ What things you need to install the software and how to install them:
  ```HCP_CLIENT_ID = "INSERT_SECRET_HERE"```
  ```HCP_CLIENT_SECRET = "INSERT_SECRET_HERE"```
  ```OPENAI_API_KEY = "INSERT_SECRET_HERE"```
+ ```DATABASE_PASSWORD = "INSERT_SECRET_HERE"```
 
  **We can now run the backend server**
 
