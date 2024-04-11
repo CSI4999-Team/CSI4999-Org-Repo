@@ -9,7 +9,7 @@ import "./App.css";
 import UserProfile from "./components/UserProfile"
 
 function App() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");

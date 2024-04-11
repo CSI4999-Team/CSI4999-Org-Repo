@@ -66,9 +66,11 @@ def analyze_resume(request):
             data = json.loads(request.body)  # Correctly load the JSON data sent from the frontend
             resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
             user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
-
+        
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
             job_desc = data.get('job_desc', '')
+            user_id = data.get('user_id', '')
+            print(user_id) #remove after implementation 
 
             if confirm_skip:
                 # If user chooses to skip, assign a custom prompt to job_description
