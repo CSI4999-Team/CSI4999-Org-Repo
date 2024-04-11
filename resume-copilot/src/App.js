@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import "./App.css";
+import UserProfile from "./components/UserProfile"
 
 function App() {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
