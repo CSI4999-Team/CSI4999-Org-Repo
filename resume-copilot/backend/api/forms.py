@@ -1,17 +1,7 @@
 from django import forms
-from .models import Job, Resume, User
+from .models import UserData
 
-class UserForm(forms.ModelForm):
+class UserDataForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['name', 'email', 'token']
-
-class JobForm(forms.ModelForm):
-    class Meta:
-        model = Job
-        fields = ['title', 'description']
-
-class ResumeForm(forms.ModelForm):
-    class Meta:
-        model = Resume
-        fields = ['file']
+        model = UserData
+        fields = ['auth0_id', 'job_description', 'resume_text', 'recommendation_text']

@@ -6,7 +6,7 @@ import openai
 import os
 import fitz  # PyMuPDF for PDF processing
 from django.http import JsonResponse
-from .forms import UserForm
+from .forms import UserData
 from utils.vault_util import *
 
 # Load environment variables
@@ -16,7 +16,7 @@ load_dotenv()
 # make a user:
 def user_create(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = UserData(request.POST)
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'success'})
