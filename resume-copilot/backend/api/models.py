@@ -1,5 +1,10 @@
 from django.db import models
 
+class User(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    token = models.CharField(max_length=512)  # Assuming the token needs to be stored
+
 class Job(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()

@@ -10,7 +10,6 @@ function UserProfile() {
             <p>Name: {user.name}</p>
             <p>Email: {user.email}</p>
             <p>Token: {user.sub}</p>
-            <p>Other: {user.locale}</p>
         </div>
     ) : null;
 }

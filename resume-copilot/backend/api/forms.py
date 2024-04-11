@@ -1,5 +1,10 @@
 from django import forms
-from .models import Job, Resume
+from .models import Job, Resume, User
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['name', 'email', 'token']
 
 class JobForm(forms.ModelForm):
     class Meta:

@@ -5,11 +5,23 @@ from django.views.decorators.csrf import csrf_exempt
 import openai
 import os
 import fitz  # PyMuPDF for PDF processing
+from django.http import JsonResponse
+from .forms import UserForm
 from utils.vault_util import *
 
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
+
+# make a user:
+def user_create(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status': 'success'})
+        else:
+            return JsonResponse({'status': 'error', 'errors': form.errors})
 
 def get_openai_api_key():
     hcp_api_token = get_hcp_api_token()
