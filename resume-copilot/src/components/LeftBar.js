@@ -17,7 +17,7 @@ const LeftBar = ({ isOpen }) => {
         if (user && user.sub) {
             const fetchUserHistory = async () => {
                 try {
-                    const response = await fetch(`/api/user-data/${user.sub}/`);
+                    const response = await fetch(`https://api.resumecopilot.us/api/user-data/${user.sub}/`);
                     if (response.ok) {
                         const historyData = await response.json();
                         setUserHistory(historyData);
