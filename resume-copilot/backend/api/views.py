@@ -45,7 +45,7 @@ def delete_user_data(request, data_id):
     except UserData.DoesNotExist:
         return JsonResponse({'error': 'Data not found'}, status=404)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error: exception thrown'}, status=500)
 
 
 def get_openai_api_key():
@@ -95,7 +95,6 @@ def analyze_resume(request):
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
             job_desc = data.get('job_desc', '')
             user_id = data.get('user_id', '')
-            print(user_id) #remove after implementation 
 
             if confirm_skip:
                 # If user chooses to skip, assign a custom prompt to job_description

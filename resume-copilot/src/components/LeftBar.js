@@ -25,7 +25,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                   throw new Error('Failed to delete history entry');
               }
           } catch (error) {
-              console.error('Error deleting history entry:', error);
+              console.error('Error deleting history entry');
           }
       }
   };  
@@ -45,7 +45,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                         throw new Error('Failed to fetch user history');
                     }
                 } catch (error) {
-                    console.error('Error fetching user history:', error);
+                    console.error('Error fetching user history');
                 }
             };
             fetchUserHistory();
