@@ -6,9 +6,10 @@ import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import "./App.css";
+import UserProfile from "./components/UserProfile"
 
 function App() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
   const [selectedFile, setSelectedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");
@@ -21,6 +22,7 @@ function App() {
   const [loadingPercentage, setLoadingPercentage] = useState(0);
   const [phase, setPhase] = useState(1); // 1 for first loading phase, 2 for second
   const [showLoadingBar, setShowLoadingBar] = useState(true); // Show or hide the loading bar
+  const [userHistory, setUserHistory] = useState([]);
 
   /* Functions */
 
@@ -200,7 +202,7 @@ const handleSkip = () => {
             />
           </div>
           <main className="App-main">
-            <LeftBar isOpen={sidebarOpen} />
+          <LeftBar isOpen={sidebarOpen} userHistory={userHistory} />
             <div
               className="exp"
               style={{

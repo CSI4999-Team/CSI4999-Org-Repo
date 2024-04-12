@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
 import "./UploadForm.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, confirmSkip }) {
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const fileInputRef = useRef(null);
+  const { user } = useAuth0();
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -51,7 +53,8 @@ function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, conf
         body: JSON.stringify({ 
           resume_text: resumeText,
           confirm_skip: confirmSkip,
-          job_desc: jobDescription
+          job_desc: jobDescription,
+          user_id: user.sub
          }),
       });
       const analyzeData = await analyzeResponse.json();
