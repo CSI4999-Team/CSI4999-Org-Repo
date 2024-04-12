@@ -6,6 +6,7 @@ import openai
 import os
 import fitz  # PyMuPDF for PDF processing
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 from .forms import *
 from .models import *
 from utils.vault_util import *
@@ -14,6 +15,7 @@ from utils.vault_util import *
 from dotenv import load_dotenv
 load_dotenv()
 
+# get user data
 def get_user_data(request, auth0_id):
     try:
         user_data_list = UserData.objects.filter(auth0_id=auth0_id)
@@ -31,6 +33,19 @@ def get_user_data(request, auth0_id):
     except Exception as e:
        # logger.error(f"Unexpected error occurred: {str(e)}")
         return JsonResponse({'error': 'Internal server error'}, status=500)
+    
+# delete user data
+@require_http_methods(["DELETE"])
+def delete_user_data(request, data_id):
+    try:
+        user_data = UserData.objects.get(id=data_id)
+        user_data.delete()
+        return JsonResponse({'message': 'Data deleted successfully'}, status=204)
+    except UserData.DoesNotExist:
+        return JsonResponse({'error': 'Data not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
 
 def get_openai_api_key():
     hcp_api_token = get_hcp_api_token()
