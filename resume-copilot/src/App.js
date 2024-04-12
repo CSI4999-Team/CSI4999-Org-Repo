@@ -23,6 +23,7 @@ function App() {
   const [phase, setPhase] = useState(1); // 1 for first loading phase, 2 for second
   const [showLoadingBar, setShowLoadingBar] = useState(true); // Show or hide the loading bar
   const [userHistory, setUserHistory] = useState([]);
+  const [currentIntervalId, setCurrentIntervalId] = useState(null);
 
   /* Functions */
 
@@ -160,6 +161,13 @@ const handleSkip = () => {
     }
     setIsUploading(true); // Mimic the uploading state to display loading UI
 
+     // Clear the existing interval if one is running
+     if (currentIntervalId) {
+      clearInterval(currentIntervalId);
+      setCurrentIntervalId(null);
+    }
+
+
     setTimeout(() => {
         setAnalysisResult(''); // Clear previous results right before setting new ones
         setIsUploading(false); // Stop showing the loading screen
@@ -176,12 +184,24 @@ const handleSkip = () => {
                 currentIndex += chunkSize;
             } else {
                 clearInterval(interval); // Clear interval when all text has been dripped
+                setCurrentIntervalId(null); // Clear the interval ID when done
             }
         }, 20);
+        setCurrentIntervalId(interval); // Store the interval ID
         // Set the job description, default to "Generic Feedback" if none provided
         setJobDescription(jobDescription || "Generic Feedback");
     }, 300); // This delay simulates the wait time as if it's processing data
 };
+
+useEffect(() => {
+  // Clear the interval when the component unmounts
+  return () => {
+    if (currentIntervalId) {
+      clearInterval(currentIntervalId);
+    }
+  };
+}, [currentIntervalId]);
+
 
 
   const startUploading = () => {
