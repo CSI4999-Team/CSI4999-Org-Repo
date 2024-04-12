@@ -178,9 +178,8 @@ const handleSkip = () => {
                 clearInterval(interval); // Clear interval when all text has been dripped
             }
         }, 20);
-
-        // Optionally, update state for job description if you want to display it elsewhere
-        setJobDescription(jobDescription);
+        // Set the job description, default to "Generic Feedback" if none provided
+        setJobDescription(jobDescription || "Generic Feedback");
     }, 300); // This delay simulates the wait time as if it's processing data
 };
 
