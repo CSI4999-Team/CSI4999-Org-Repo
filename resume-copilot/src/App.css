@@ -236,6 +236,7 @@ button {
   justify-content: center;
   align-items: center;
   width: 8px; /* Adjust the size as needed */
+  z-index: 1000;
 }
 
 .toggle-button:hover {

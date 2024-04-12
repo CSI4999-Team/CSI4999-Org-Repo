@@ -6,6 +6,7 @@ import openai
 import os
 import fitz  # PyMuPDF for PDF processing
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 from .forms import *
 from .models import *
 from utils.vault_util import *
@@ -14,12 +15,14 @@ from utils.vault_util import *
 from dotenv import load_dotenv
 load_dotenv()
 
+# get user data
 def get_user_data(request, auth0_id):
     try:
         user_data_list = UserData.objects.filter(auth0_id=auth0_id)
         if user_data_list.exists():
             data = [
                 {
+                    'id': user_data.id,
                     'job_description': user_data.job_description,
                     'resume_text': user_data.resume_text,
                     'recommendation_text': user_data.recommendation_text
@@ -29,8 +32,21 @@ def get_user_data(request, auth0_id):
         else:
             return JsonResponse({'message': 'No user data found'}, status=404)
     except Exception as e:
-        logger.error(f"Unexpected error occurred: {str(e)}")
         return JsonResponse({'error': 'Internal server error'}, status=500)
+    
+# delete user data
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_user_data(request, data_id):
+    try:
+        user_data = UserData.objects.get(id=data_id)
+        user_data.delete()
+        return JsonResponse({'message': 'Data deleted successfully'}, status=204)
+    except UserData.DoesNotExist:
+        return JsonResponse({'error': 'Data not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error: exception thrown'}, status=500)
+
 
 def get_openai_api_key():
     hcp_api_token = get_hcp_api_token()
@@ -79,7 +95,6 @@ def analyze_resume(request):
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
             job_desc = data.get('job_desc', '')
             user_id = data.get('user_id', '')
-            print(user_id) #remove after implementation 
 
             if confirm_skip:
                 # If user chooses to skip, assign a custom prompt to job_description
