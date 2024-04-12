@@ -22,6 +22,7 @@ def get_user_data(request, auth0_id):
         if user_data_list.exists():
             data = [
                 {
+                    'id': user_data.id,
                     'job_description': user_data.job_description,
                     'resume_text': user_data.resume_text,
                     'recommendation_text': user_data.recommendation_text
@@ -31,10 +32,10 @@ def get_user_data(request, auth0_id):
         else:
             return JsonResponse({'message': 'No user data found'}, status=404)
     except Exception as e:
-       # logger.error(f"Unexpected error occurred: {str(e)}")
         return JsonResponse({'error': 'Internal server error'}, status=500)
     
 # delete user data
+@csrf_exempt
 @require_http_methods(["DELETE"])
 def delete_user_data(request, data_id):
     try:
