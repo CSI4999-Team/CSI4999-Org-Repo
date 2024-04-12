@@ -3,7 +3,7 @@ import { motion, useTransform, useScroll } from "framer-motion";
 import "./LeftBar.css";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const LeftBar = ({ isOpen }) => {
+const LeftBar = ({ isOpen, onHistoryItemClick }) => {
     const { user } = useAuth0();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const targetRef = useRef(null);
@@ -17,7 +17,7 @@ const LeftBar = ({ isOpen }) => {
         if (user && user.sub) {
             const fetchUserHistory = async () => {
                 try {
-                    const response = await fetch(`/api/user-data/${user.sub}/`);
+                    const response = await fetch(`http://localhost:8000/api/user-data/${user.sub}/`);
                     if (response.ok) {
                         const historyData = await response.json();
                         setUserHistory(historyData);
@@ -38,10 +38,6 @@ const LeftBar = ({ isOpen }) => {
 
     const x = useTransform(scrollXProgress, [0, 1], ["1%", "-95%"]);
 
-    const handleHistoryItemClick = (entry) => {
-        console.log('Clicked on history entry:', entry);
-    };
-
     return (
         <motion.div
             ref={targetRef}
@@ -53,7 +49,7 @@ const LeftBar = ({ isOpen }) => {
                 <ul>
                     {userHistory.map((entry, index) => (
                         <li key={index}>
-                            <button className="ResButtons" onClick={() => handleHistoryItemClick(entry)}>
+                            <button className="ResButtons" onClick={() => onHistoryItemClick(entry)}>
                                 {entry.job_description || 'General Feedback'}
                             </button>
                         </li>

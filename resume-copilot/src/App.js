@@ -26,6 +26,16 @@ function App() {
 
   /* Functions */
 
+    // Handler when a history item is clicked
+    const handleHistoryItemClick = (entry) => {
+      if (!entry.recommendation_text) {
+          console.error("No recommendation text available in the entry");
+          return; // Avoid calling the function if recommendation text is undefined
+      }
+      setCurrentStep(5); // Move to step 5 which is for displaying saved results
+      handleHistoricalAnalysis(entry.recommendation_text, entry.job_description);
+  };
+
   useEffect(() => {
     if (!isUploading) {
       setShowLoadingBar(false); // Hide the loading bar if not uploading
@@ -143,6 +153,38 @@ const handleSkip = () => {
     }, 3000); // This delay simulates the wait time for the analysis to complete
   };
 
+  const handleHistoricalAnalysis = (recommendation, jobDescription) => {
+    if (!recommendation) {
+        console.error("Recommendation text is undefined or empty");
+        return; // Prevent further execution if recommendation text is undefined or empty
+    }
+    setIsUploading(true); // Mimic the uploading state to display loading UI
+
+    setTimeout(() => {
+        setAnalysisResult(''); // Clear previous results right before setting new ones
+        setIsUploading(false); // Stop showing the loading screen
+        setCurrentStep(5); // Move to the step for displaying saved results
+
+        // Initialize the "dripping" effect for displaying the analysis results
+        const chunkSize = 5;
+        let currentIndex = 0;
+        const interval = setInterval(() => {
+            if (currentIndex < recommendation.length) {
+                const nextChunkEndIndex = Math.min(currentIndex + chunkSize, recommendation.length);
+                const nextChunk = recommendation.substring(currentIndex, nextChunkEndIndex);
+                setAnalysisResult(prevResult => prevResult + nextChunk);
+                currentIndex += chunkSize;
+            } else {
+                clearInterval(interval); // Clear interval when all text has been dripped
+            }
+        }, 20);
+
+        // Optionally, update state for job description if you want to display it elsewhere
+        setJobDescription(jobDescription);
+    }, 300); // This delay simulates the wait time as if it's processing data
+};
+
+
   const startUploading = () => {
     setIsUploading(true); // Start showing the loading screen immediately
   };
@@ -202,7 +244,7 @@ const handleSkip = () => {
             />
           </div>
           <main className="App-main">
-          <LeftBar isOpen={sidebarOpen} userHistory={userHistory} />
+          <LeftBar isOpen={sidebarOpen} userHistory={userHistory} onHistoryItemClick={handleHistoryItemClick} />
             <div
               className="exp"
               style={{
@@ -295,6 +337,15 @@ const handleSkip = () => {
                   <div className="analysisResultMarkdownContainer">
                     <ReactMarkdown>{analysisResult}</ReactMarkdown>
                   </div>
+                </CSSTransition>
+              )}
+              {currentStep === 5 && analysisResult && (
+                <CSSTransition key="savedResults" timeout={1000} classNames="fade">
+                    <div className="analysisResultMarkdownContainer">
+                        <ReactMarkdown>{analysisResult}</ReactMarkdown>
+                        <h3>Job Description:</h3>
+                        <p>{jobDescription}</p>
+                    </div>
                 </CSSTransition>
               )}
             </TransitionGroup>

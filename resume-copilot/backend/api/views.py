@@ -29,7 +29,7 @@ def get_user_data(request, auth0_id):
         else:
             return JsonResponse({'message': 'No user data found'}, status=404)
     except Exception as e:
-        logger.error(f"Unexpected error occurred: {str(e)}")
+       # logger.error(f"Unexpected error occurred: {str(e)}")
         return JsonResponse({'error': 'Internal server error'}, status=500)
 
 def get_openai_api_key():
