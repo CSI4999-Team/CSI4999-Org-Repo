@@ -18,7 +18,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
   
       if (window.confirm("Are you sure you want to delete this entry?")) {
           try {
-              const response = await fetch(`http://localhost:8000/api/delete-data/${entryId}/`, { method: 'DELETE' });
+              const response = await fetch(`https://api.resumecopilot.us/api/delete-data/${entryId}/`, { method: 'DELETE' });
               if (response.ok) {
                   setUserHistory(prevHistory => prevHistory.filter(entry => entry.id !== entryId));
               } else {
