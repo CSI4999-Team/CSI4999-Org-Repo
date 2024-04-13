@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useTransform, useScroll } from "framer-motion";
+import { FaTrash } from 'react-icons/fa';
 import "./LeftBar.css";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const LeftBar = ({ isOpen }) => {
+const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
     const { user } = useAuth0();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const targetRef = useRef(null);
@@ -11,7 +12,26 @@ const LeftBar = ({ isOpen }) => {
         target: targetRef,
         axis: "x",
     });
+
+    const handleDelete = async (entryId) => {
+      console.log("Attempting to delete entry with ID:", entryId);  // Log the ID being received
+  
+      if (window.confirm("Are you sure you want to delete this entry?")) {
+          try {
+              const response = await fetch(`http://localhost:8000/api/delete-data/${entryId}/`, { method: 'DELETE' });
+              if (response.ok) {
+                  setUserHistory(prevHistory => prevHistory.filter(entry => entry.id !== entryId));
+              } else {
+                  throw new Error('Failed to delete history entry');
+              }
+          } catch (error) {
+              console.error('Error deleting history entry');
+          }
+      }
+  };  
+
     const [userHistory, setUserHistory] = useState([]);
+    const [hoveredHistoryItem, setHoveredHistoryItem] = useState(null);
 
     useEffect(() => {
         if (user && user.sub) {
@@ -25,7 +45,7 @@ const LeftBar = ({ isOpen }) => {
                         throw new Error('Failed to fetch user history');
                     }
                 } catch (error) {
-                    console.error('Error fetching user history:', error);
+                    console.error('Error fetching user history');
                 }
             };
             fetchUserHistory();
@@ -38,10 +58,6 @@ const LeftBar = ({ isOpen }) => {
 
     const x = useTransform(scrollXProgress, [0, 1], ["1%", "-95%"]);
 
-    const handleHistoryItemClick = (entry) => {
-        console.log('Clicked on history entry:', entry);
-    };
-
     return (
         <motion.div
             ref={targetRef}
@@ -50,15 +66,19 @@ const LeftBar = ({ isOpen }) => {
         >
             <h2 className="prevRes">User History</h2>
             {userHistory.length > 0 ? (
-                <ul>
-                    {userHistory.map((entry, index) => (
-                        <li key={index}>
-                            <button className="ResButtons" onClick={() => handleHistoryItemClick(entry)}>
-                                {entry.job_description || 'General Feedback'}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+              <ul>
+                {userHistory.map((entry, index) => (
+                    <li key={index} className="history-item">
+                        <button className="ResButtons" onClick={() => onHistoryItemClick(entry)}>
+                            {entry.job_description || 'General Feedback'}
+                            <FaTrash className="delete-icon" onClick={(e) => {
+                                e.stopPropagation(); // Prevent button click event when clicking the icon
+                                handleDelete(entry.id);
+                            }} />
+                        </button>
+                    </li>
+                ))}
+            </ul>            
             ) : (
                 <p>No history available or still loading...</p>
             )}
