@@ -14,21 +14,21 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
     });
 
     const handleDelete = async (entryId) => {
-      console.log("Attempting to delete entry with ID:", entryId);  // Log the ID being received
-  
-      if (window.confirm("Are you sure you want to delete this entry?")) {
-          try {
-              const response = await fetch(`https://api.resumecopilot.us/api/delete-data/${entryId}/`, { method: 'DELETE' });
-              if (response.ok) {
-                  setUserHistory(prevHistory => prevHistory.filter(entry => entry.id !== entryId));
-              } else {
-                  throw new Error('Failed to delete history entry');
-              }
-          } catch (error) {
-              console.error('Error deleting history entry');
-          }
-      }
-  };  
+        console.log("Attempting to delete entry with ID:", entryId);  // Log the ID being received
+
+        if (window.confirm("Are you sure you want to delete this entry?")) {
+            try {
+                const response = await fetch(`https://api.resumecopilot.us/api/delete-data/${entryId}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    setUserHistory(prevHistory => prevHistory.filter(entry => entry.id !== entryId));
+                } else {
+                    throw new Error('Failed to delete history entry');
+                }
+            } catch (error) {
+                console.error('Error deleting history entry');
+            }
+        }
+    };  
 
     const [userHistory, setUserHistory] = useState([]);
     const [hoveredHistoryItem, setHoveredHistoryItem] = useState(null);
@@ -62,7 +62,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
         <motion.div
             ref={targetRef}
             className={`left-bar ${isOpen || sidebarOpen ? "open" : ""}`}
-            style={{ x, backgroundColor: "#282C34" }}
+            style={{ x, backgroundColor: "#282C34", overflowY: 'auto' }} // added overflowY for scrolling
         >
             <h2 className="prevRes">User History</h2>
             {userHistory.length > 0 ? (
@@ -70,7 +70,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                 {userHistory.map((entry, index) => (
                     <li key={index} className="history-item">
                         <button className="ResButtons" onClick={() => onHistoryItemClick(entry)}>
-                            {entry.job_description || 'General Feedback'}
+                            {entry.job_description ? entry.job_description.split(' ').slice(0, 5).join(' ') + '...' : 'General Feedback'}
                             <FaTrash className="delete-icon" onClick={(e) => {
                                 e.stopPropagation(); // Prevent button click event when clicking the icon
                                 handleDelete(entry.id);

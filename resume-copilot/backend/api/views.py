@@ -10,10 +10,16 @@ from django.views.decorators.http import require_http_methods
 from .forms import *
 from .models import *
 from utils.vault_util import *
+import logging
+from django.http import JsonResponse
+from django.conf import settings
 
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 # get user data
 def get_user_data(request, auth0_id):
@@ -30,9 +36,10 @@ def get_user_data(request, auth0_id):
             ]
             return JsonResponse(data, safe=False)  # `safe=False` is needed when returning a list
         else:
-            return JsonResponse({'message': 'No user data found'}, status=404)
+            return JsonResponse({'No user data found'}, status=404)
     except Exception as e:
-        return JsonResponse({'error': 'Internal server error'}, status=500)
+        logger.error(f'Error fetching user data for auth0_id {auth0_id}: {str(e)}', exc_info=True)
+        return JsonResponse({'Internal server error. Please contact support.'}, status=500)
     
 # delete user data
 @csrf_exempt
