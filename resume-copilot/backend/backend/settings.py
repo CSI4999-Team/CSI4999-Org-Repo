@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-atp+_5%lla5jxk=3d2@#836vfe6f!&)m2dd(xgi0-hq2_y@=v0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['resumecopilot.us', 'www.resumecopilot.us', 'resume-copilot-app-l4o8t.ondigitalocean.app', '104.131.187.171', 'api.resumecopilot.us']
+ALLOWED_HOSTS = ['login.resumecopilot.us','resumecopilot.us', 'www.resumecopilot.us', 'resume-copilot-app-l4o8t.ondigitalocean.app', '104.131.187.171', 'api.resumecopilot.us']
 
 
 # Application definition
