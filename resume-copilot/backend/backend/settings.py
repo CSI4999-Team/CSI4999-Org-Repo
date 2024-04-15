@@ -135,7 +135,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Keep restricted  in production, this allows middleware requests from specific origins
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Allow local development
+   # "http://localhost:3000",  # Allow local development
+    "https://login.resumecopilot.us",
     "https://resumecopilot.us",
     "https://www.resumecopilot.us",
     "https://resume-copilot-app-l4o8t.ondigitalocean.app",  # Your React app's domain
