@@ -12,7 +12,6 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
-
 import UserProfile from "./components/UserProfile"
 
 function App() {

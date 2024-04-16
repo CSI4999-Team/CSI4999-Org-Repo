@@ -75,7 +75,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                 {userHistory.map((entry, index) => (
                     <li key={index} className="history-item">
                         <button className="ResButtons" onClick={() => onHistoryItemClick(entry)}>
-                            {entry.job_description || 'General Feedback'}
+                            {entry.job_description ? entry.job_description.split(' ').slice(0, 5).join(' ') + '...' : 'General Feedback'}
                             <FaTrash className="delete-icon" onClick={(e) => {
                                 e.stopPropagation(); // Prevent button click event when clicking the icon
                                 handleDelete(entry.id);
