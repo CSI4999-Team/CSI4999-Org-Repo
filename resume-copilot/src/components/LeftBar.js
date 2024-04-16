@@ -55,7 +55,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
         }
     }, [user]);
 
-    const x = useTransform(scrollXProgress, [0, 1], ["1%", "-95%"]);
+    const x = useTransform(scrollXProgress, [0, 1], ["0%", "-95%"]);
 
     const tipsAndTricks = [
         { tip: "Always build your experience in reverse chronological order" },
