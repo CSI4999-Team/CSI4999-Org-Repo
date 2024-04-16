@@ -32,9 +32,11 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
 
     const [userHistory, setUserHistory] = useState([]);
     const [hoveredHistoryItem, setHoveredHistoryItem] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (user && user.sub) {
+            setIsLoading(true);
             const fetchUserHistory = async () => {
                 try {
                     const response = await fetch(`https://api.resumecopilot.us/api/user-data/${user.sub}/`);
@@ -47,16 +49,19 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                 } catch (error) {
                     console.error('Error fetching user history');
                 }
+                setIsLoading(false);
             };
             fetchUserHistory();
         }
     }, [user]);
 
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
-    };
-
     const x = useTransform(scrollXProgress, [0, 1], ["1%", "-95%"]);
+
+    const tipsAndTricks = [
+        { tip: "Always build your experience in reverse chronological order" },
+        { tip: "95% of hiring teams prefer one to two pages max" },
+        { tip: "Avoid overly technical words, a high school senior should be able to understand your resume" },
+    ];
 
     return (
         <motion.div
@@ -80,7 +85,16 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                 ))}
             </ul>            
             ) : (
-                <p>No history available or still loading...</p>
+                <>
+                    <h3 className="tiplabel">Pro tip</h3>
+                    <ul className="tnt">
+                        {tipsAndTricks.map((tip, index) => (
+                            <li key={index}>
+                                <div className="tip">{tip.tip}</div>
+                            </li>
+                        ))}
+                    </ul>
+                </>
             )}
         </motion.div>
     );

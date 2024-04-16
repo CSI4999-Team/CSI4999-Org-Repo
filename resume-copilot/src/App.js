@@ -5,7 +5,13 @@ import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import "./App.css";
+// Import pages from components
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsAndConditions from './components/TermsAndConditions';
+import TipsAndTricks from './components/TipsAndTricks';
+import AboutUs from './components/AboutUs';
 import UserProfile from "./components/UserProfile"
 
 function App() {
@@ -239,11 +245,20 @@ useEffect(() => {
   /* App Login returned to User */
   
   return (
+    <BrowserRouter>
     <div className="App">
       {isAuthenticated ? (
         <div className={`content ${sidebarOpen ? "sidebar-open" : ""}`}>
           <header className="App-header">
             {/* Other content */}
+            <nav className="pagelinks">
+                {/* Updated navigation links */}
+                <Link className="link"to="/">Home</Link>
+                <Link className="link"to="/tips-and-tricks">Tips and Tricks</Link>
+                <Link className="link"to="/about-us">About the Creators</Link>
+                <Link className="link"to="/privacy-policy">Privacy Policy</Link>
+                <Link className="link"to="/terms-and-conditions">Terms and Conditions</Link>
+              </nav>
             <div className="menu-container">
               <button onClick={toggleMenu} className="hamburger-menu">☰</button>
               {isMenuOpen && (
@@ -263,6 +278,9 @@ useEffect(() => {
             />
           </div>
           <main className="App-main">
+          <Routes>
+          <Route path="/" element={
+             <>
           <LeftBar isOpen={sidebarOpen} userHistory={userHistory} onHistoryItemClick={handleHistoryItemClick} />
             <div
               className="exp"
@@ -369,12 +387,20 @@ useEffect(() => {
               )}
             </TransitionGroup>
             </div>
+            </>
+            } />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/tips-and-tricks" element={<TipsAndTricks />} />
+            <Route path="/about-us" element={<AboutUs />}/>
+          </Routes>
           </main>
         </div>
       ) : (
         <div>Redirecting to login...</div>
       )}
     </div>
+    </BrowserRouter>
   );
 }
 
