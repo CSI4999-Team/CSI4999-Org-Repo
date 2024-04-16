@@ -30,8 +30,19 @@ function App() {
   const [phase, setPhase] = useState(1); // 1 for first loading phase, 2 for second
   const [showLoadingBar, setShowLoadingBar] = useState(true); // Show or hide the loading bar
   const [userHistory, setUserHistory] = useState([]);
+  const [currentIntervalId, setCurrentIntervalId] = useState(null);
 
   /* Functions */
+
+    // Handler when a history item is clicked
+    const handleHistoryItemClick = (entry) => {
+      if (!entry.recommendation_text) {
+          console.error("No recommendation text available in the entry");
+          return; // Avoid calling the function if recommendation text is undefined
+      }
+      setCurrentStep(5); // Move to step 5 which is for displaying saved results
+      handleHistoricalAnalysis(entry.recommendation_text, entry.job_description);
+  };
 
   useEffect(() => {
     if (!isUploading) {
@@ -150,6 +161,56 @@ const handleSkip = () => {
     }, 3000); // This delay simulates the wait time for the analysis to complete
   };
 
+  const handleHistoricalAnalysis = (recommendation, jobDescription) => {
+    if (!recommendation) {
+        console.error("Recommendation text is undefined or empty");
+        return; // Prevent further execution if recommendation text is undefined or empty
+    }
+    setIsUploading(true); // Mimic the uploading state to display loading UI
+
+     // Clear the existing interval if one is running
+     if (currentIntervalId) {
+      clearInterval(currentIntervalId);
+      setCurrentIntervalId(null);
+    }
+
+
+    setTimeout(() => {
+        setAnalysisResult(''); // Clear previous results right before setting new ones
+        setIsUploading(false); // Stop showing the loading screen
+        setCurrentStep(5); // Move to the step for displaying saved results
+
+        // Initialize the "dripping" effect for displaying the analysis results
+        const chunkSize = 5;
+        let currentIndex = 0;
+        const interval = setInterval(() => {
+            if (currentIndex < recommendation.length) {
+                const nextChunkEndIndex = Math.min(currentIndex + chunkSize, recommendation.length);
+                const nextChunk = recommendation.substring(currentIndex, nextChunkEndIndex);
+                setAnalysisResult(prevResult => prevResult + nextChunk);
+                currentIndex += chunkSize;
+            } else {
+                clearInterval(interval); // Clear interval when all text has been dripped
+                setCurrentIntervalId(null); // Clear the interval ID when done
+            }
+        }, 20);
+        setCurrentIntervalId(interval); // Store the interval ID
+        // Set the job description, default to "Generic Feedback" if none provided
+        setJobDescription(jobDescription || "Generic Feedback");
+    }, 300); // This delay simulates the wait time as if it's processing data
+};
+
+useEffect(() => {
+  // Clear the interval when the component unmounts
+  return () => {
+    if (currentIntervalId) {
+      clearInterval(currentIntervalId);
+    }
+  };
+}, [currentIntervalId]);
+
+
+
   const startUploading = () => {
     setIsUploading(true); // Start showing the loading screen immediately
   };
@@ -221,7 +282,7 @@ const handleSkip = () => {
           <Routes>
           <Route path="/" element={
              <>
-          <LeftBar isOpen={sidebarOpen} userHistory={userHistory} />
+          <LeftBar isOpen={sidebarOpen} userHistory={userHistory} onHistoryItemClick={handleHistoryItemClick} />
             <div
               className="exp"
               style={{
@@ -314,6 +375,15 @@ const handleSkip = () => {
                   <div className="analysisResultMarkdownContainer">
                     <ReactMarkdown>{analysisResult}</ReactMarkdown>
                   </div>
+                </CSSTransition>
+              )}
+              {currentStep === 5 && analysisResult && (
+                <CSSTransition key="savedResults" timeout={1000} classNames="fade">
+                    <div className="analysisResultMarkdownContainer">
+                        <ReactMarkdown>{analysisResult}</ReactMarkdown>
+                        <h3>Job Description:</h3>
+                        <p>{jobDescription}</p>
+                    </div>
                 </CSSTransition>
               )}
             </TransitionGroup>

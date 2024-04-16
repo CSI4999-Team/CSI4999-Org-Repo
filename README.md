@@ -33,7 +33,11 @@ What things you need to install the software and how to install them:
 
  ```npm install @auth0/auth0-react```
 
+<<<<<<< HEAD
  ```npm install react-router-dom@6```
+=======
+ ```npm install react-icons```
+>>>>>>> main
 
  ```npm start```
 

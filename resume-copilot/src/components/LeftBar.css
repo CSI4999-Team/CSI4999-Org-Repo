@@ -4,6 +4,7 @@
     /* border-bottom-right-radius: 10px; */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #282c34;
+    z-index: 1000;
 }
 
 .prevRes {
@@ -49,10 +50,27 @@ ul {
 }
 
 .ResButtons {
+    position: relative; /* Added relative positioning */
     padding: 10px;
-    width: 225px;
     background-color: #23272e;
     outline-color: white;
     outline-width: 10px;
     width: 100%;
+    text-align: left; /* Align text to the left */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+}
+
+.delete-icon {
+    position: absolute; /* Positioning icon absolutely within the button */
+    right: 10px; /* Positioned to the right within the button */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Align center with the text vertically */
+    color: rgb(210, 210, 210);
+    cursor: pointer;
+    visibility: hidden; /* Make icon hidden initially */
+}
+
+.ResButtons:hover .delete-icon {
+    visibility: visible; /* Only show icon on hover */
 }
