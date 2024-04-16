@@ -222,12 +222,12 @@ button {
 /* Sidebar toggle button */
 .toggle-button {
   position: fixed;
-  top: 19%;
+  top: 50%;
   transform: translateY(-50%);
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 0 5px 5px 0;
-  padding: 15px;
+  padding: 10px;
   cursor: pointer;
   transition: right 10s ease;
   height: 3%;
@@ -425,6 +425,21 @@ button {
   /* Slightly darker on hover */
 }
 
+.pagelinks{
+margin: px;
+}
+
+.link{
+  margin: 20px;
+  text-decoration: none;
+  color: white;
+}
+
+.link:hover{
+  background-color: rgb(41, 41, 133);
+  border-radius: 2px;
+  padding: 5px;
+}
 /* Welcoming title styling */
 
 .Welcome-Words {
