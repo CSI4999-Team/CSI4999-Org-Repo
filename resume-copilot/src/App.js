@@ -5,7 +5,7 @@ import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import "./App.css";
 // Import pages from components
 import PrivacyPolicy from './components/PrivacyPolicy';
@@ -13,6 +13,13 @@ import TermsAndConditions from './components/TermsAndConditions';
 import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
 import UserProfile from "./components/UserProfile"
+import ToggleButton from "./components/ToggleButton";
+
+function useSidebarVisibility() {
+  const location = useLocation();
+  const hideSidebarOnRoutes = ["/privacy-policy", "/terms-and-conditions", "/tips-and-tricks", "/about-us"];
+  return !hideSidebarOnRoutes.includes(location.pathname);
+}
 
 function App() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
@@ -270,13 +277,7 @@ useEffect(() => {
               )}
             </div>
           </header>
-          <div className="toggle-button" onClick={toggleSidebar}>
-            <img
-              src="./arrow-right.svg"
-              alt="An arrow"
-              style={{ transform: sidebarOpen ? "scaleX(-1)" : "scaleX(1)" }}
-            />
-          </div>
+          <ToggleButton sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} setSidebarOpen={setSidebarOpen} />
           <main className="App-main">
           <Routes>
           <Route path="/" element={
