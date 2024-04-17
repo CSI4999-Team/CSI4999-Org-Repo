@@ -510,3 +510,40 @@ margin: px;
 .progress-text {
   margin-top: 20px;
 }
+
+/* reset and refresh session button */
+
+@keyframes gradient-swirl {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.refresh-button {
+  background: linear-gradient(to right, #027d92, #15aec8, #1DB8D4, #15aec8, #027d92);
+  background-size: 300% 300%; /* Increase the size of the gradient background */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: gradient-swirl 4s ease infinite; /* Apply the animation */
+}
+
+.refresh-button:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.refresh-button:active {
+  transform: translateY(2px);
+}
