@@ -547,3 +547,36 @@ margin: px;
 .refresh-button:active {
   transform: translateY(2px);
 }
+
+/* Loading Circle for between screens and while refreshing content */
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Make sure the container fills the entire height of the viewport */
+  width: 100vw; /* Ensure the container fills the entire width of the viewport */
+  position: fixed; /* Position it relative to the viewport */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Optionally, set a high z-index to overlay over other content */
+}
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-circle {
+  border: 5px solid #f3f3f3; /* Light grey background */
+  border-top: 5px solid #3498db; /* Blue color */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}

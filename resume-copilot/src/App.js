@@ -230,7 +230,15 @@ useEffect(() => {
     }
   }, [isLoading, isAuthenticated, loginWithRedirect]);
 
-  if (isLoading) return <div>Loading...</div>;
+  // when website is loading or between screens
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-circle"></div>
+      </div>
+    );
+  }
+  
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
