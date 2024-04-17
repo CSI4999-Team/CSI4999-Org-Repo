@@ -250,6 +250,14 @@ useEffect(() => {
       </div>
     );
   };
+
+/* User can reset session */
+const handleRefresh = () => {
+  if (window.confirm("Are you sure you want to start a new session? \nNote: Your feedback data is already saved in your user history tab.")) {
+    window.location.reload(true); // The 'true' parameter forces the browser to get the latest version from the server and not from cache
+  }
+};
+
   
 
   /* App Login returned to User */
@@ -382,10 +390,13 @@ useEffect(() => {
               )}
               {currentStep === 5 && analysisResult && (
                 <CSSTransition key="savedResults" timeout={1000} classNames="fade">
+                  <div>
+                  <button onClick={handleRefresh} className="refresh-button">Start New Feedback Session</button>
                     <div className="analysisResultMarkdownContainer">
                         <ReactMarkdown>{analysisResult}</ReactMarkdown>
                         <h3>Job Description:</h3>
                         <p>{jobDescription}</p>
+                    </div>
                     </div>
                 </CSSTransition>
               )}

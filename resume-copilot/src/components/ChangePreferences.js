@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 const ChangePreferences = () => {
     const { isAuthenticated, isLoading } = useAuth0();
     const navigate = useNavigate();
-    const audioRef = useRef();
 
     if (isLoading) {
         return <div>Loading...</div>;
