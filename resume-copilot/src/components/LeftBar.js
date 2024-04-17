@@ -10,6 +10,17 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
     const targetRef = useRef(null);
     const { scrollXProgress } = useScroll({ target: targetRef, axis: "x" });
     const [showTooltip, setShowTooltip] = useState(false);
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+
+    const handleTooltipToggle = () => {
+        if (!showTooltip) {
+            setTooltipVisible(true);  // Immediately make the tooltip part of the DOM
+            setTimeout(() => setShowTooltip(true), 10);  // Slightly delay the visibility to catch the transition
+        } else {
+            setShowTooltip(false);  // Hide tooltip
+            setTimeout(() => setTooltipVisible(false), 250);  // Remove from DOM after transitions
+        }
+    };
 
     const handleDelete = async (entryId) => {
         console.log("Attempting to delete entry with ID:", entryId);  // Log the ID being received
@@ -86,17 +97,17 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                 <>
                     <h3 className="tiplabel">
                         <button 
-                            onClick={() => setShowTooltip(!showTooltip)}
+                            onClick={handleTooltipToggle}
                             style={{ background: "none", border: "none", cursor: "pointer", padding: "0", display: "inline-flex", alignItems: "center" }}
                         >
                             <FaInfoCircle size={14} style={{ marginRight: "8px" }}/>
                             No history yet!
                         </button>
                     </h3>
-                    {showTooltip && (
-                        <div className="tooltip">
-                            Your history will automatically load here after you use our site.
-                        </div>
+                    {tooltipVisible && (
+                    <div className={`tooltip ${showTooltip ? "visible" : ""}`}>
+                        Your history will automatically load here after you use our site.
+                    </div>
                     )}
                     <div className="tips-container">
                         <h4 className="tiplabel">Pro Tips:</h4>

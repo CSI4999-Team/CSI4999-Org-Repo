@@ -6,7 +6,7 @@ const ToggleButton = ({ sidebarOpen, toggleSidebar, setSidebarOpen }) => {
   const navigate = useNavigate();
 
   // Define the routes where you want to show the toggle button
-  const showToggleOnRoutes = ['/', '/home'];
+  const showToggleOnRoutes = ['/'];
 
   // Check if the current route is in the showToggleOnRoutes array
   const showToggleButton = showToggleOnRoutes.includes(location.pathname);
