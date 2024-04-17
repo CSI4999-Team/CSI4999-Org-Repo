@@ -12,6 +12,9 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
+import ManageAccount from './components/ManageAccount'
+import ChangePreferences from './components/ChangePreferences'
+
 import UserProfile from "./components/UserProfile"
 import ToggleButton from "./components/ToggleButton";
 
@@ -394,6 +397,8 @@ useEffect(() => {
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/tips-and-tricks" element={<TipsAndTricks />} />
             <Route path="/about-us" element={<AboutUs />}/>
+            <Route path="/manage-account" element={<ManageAccount />}/>
+            <Route path="/change-preferences" element={<ChangePreferences />}/>
           </Routes>
           </main>
         </div>

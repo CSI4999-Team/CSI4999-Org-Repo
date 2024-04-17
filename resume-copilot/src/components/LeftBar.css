@@ -117,7 +117,7 @@ ul {
     justify-content: flex-start; /* Align text to the start (left) */
     align-items: center; /* Center text vertically */
     text-align: left; /* Text inside should align to the left */
-    font-size: 0.7em; /* Smaller font size */
+    font-size: 1.0em; /* Smaller font size */
     color: #ffffff; /* Dark gray color for text */
 }
 
