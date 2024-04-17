@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import "./UploadForm.css";
 import { useAuth0 } from "@auth0/auth0-react";
 
-function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, confirmSkip }) {
+function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, confirmSkip, setPdfBlob, outputMethod }) {
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const fileInputRef = useRef(null);
@@ -45,22 +45,35 @@ function UploadForm({ onAnalysisComplete, onStartUploading, jobDescription, conf
       const resumeText = parseData.extracted_text;
 
       // Step 2: Analyze the extracted resume text
-      const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          resume_text: resumeText,
-          confirm_skip: confirmSkip,
-          job_desc: jobDescription,
-          user_id: user.sub
-         }),
-      });
-      const analyzeData = await analyzeResponse.json();
-
-      // Call the callback with the analysis result
-      onAnalysisComplete(analyzeData.response);
+      const fileReader = new FileReader();
+      fileReader.onload = async function(event) {
+        const pdfBase64 = event.target.result.split(',')[1];
+        const analyzeResponse = await fetch("http://localhost:8000/api/analyze_resume/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            resume_text: resumeText,
+            confirm_skip: confirmSkip,
+            job_desc: jobDescription,
+            output_method: outputMethod,
+            pdf_base64: pdfBase64,
+            user_id: user.sub
+          }),
+        });
+        
+        if (outputMethod == 'text') {
+          const analyzeData = await analyzeResponse.json();
+          // Call the callback with the analysis result
+          onAnalysisComplete(analyzeData.response);
+        } else {
+          const pdfBlob = await analyzeResponse.blob();
+          setPdfBlob(pdfBlob)
+        }
+      }
+      fileReader.readAsDataURL(file);
+      
     } catch (error) {
       console.error("Error during file upload:", error);
     }
