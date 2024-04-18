@@ -40,8 +40,21 @@ function App() {
   const [showLoadingBar, setShowLoadingBar] = useState(true); // Show or hide the loading bar
   const [userHistory, setUserHistory] = useState([]);
   const [currentIntervalId, setCurrentIntervalId] = useState(null);
+  const disableBodyScroll = () => document.body.classList.add('no-scroll');
+  const enableBodyScroll = () => document.body.classList.remove('no-scroll');
 
   /* Functions */
+
+  useEffect(() => {
+    if (isUploading) {
+      disableBodyScroll();
+    } else {
+      enableBodyScroll();
+    }
+
+    // Clean-up function to re-enable scrolling when the component unmounts or isUploading changes
+    return () => enableBodyScroll();
+  }, [isUploading]);
 
     // Handler when a history item is clicked
     const handleHistoryItemClick = (entry) => {
@@ -279,7 +292,10 @@ const handleRefresh = () => {
             {/* Other content */}
             <nav className="pagelinks">
                 {/* Updated navigation links */}
-                <Link className="link"to="/">Home</Link>
+                <Link className="link" to="/" onClick={(e) => {
+                  e.preventDefault(); // Prevent the default Link behavior
+                  window.location.href = '/'; // Force the browser to reload the page
+                }}>Home</Link>
                 <Link className="link"to="/tips-and-tricks">Tips and Tricks</Link>
                 <Link className="link"to="/about-us">About the Creators</Link>
                 <Link className="link"to="/privacy-policy">Privacy Policy</Link>
