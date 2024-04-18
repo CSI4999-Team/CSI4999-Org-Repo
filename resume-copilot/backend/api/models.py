@@ -5,3 +5,4 @@ class UserData(models.Model):
     job_description = models.TextField()  # Store job descriptions
     resume_text = models.TextField()  # Store resume text
     recommendation_text = models.TextField()  # Store resume text
+    created_at = models.DateTimeField()
