@@ -84,6 +84,7 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                 <ul>
                     {userHistory.map((entry, index) => (
                         <li key={index} className="history-item">
+                            <div className="entry-date">{moment(entry.created_at).fromNow()}</div>
                             <button className="ResButtons" onClick={() => onHistoryItemClick(entry)}>
                             {entry.job_description ? (
                                 entry.job_description.split(' ').slice(0, 5).join(' ') + '...'
@@ -91,9 +92,8 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                                 `General feedback - ${
                                     entry.recommendation_text.match(/overall\s*(score)?\s*:\s*\d+\/100/i) 
                                       ? entry.recommendation_text.match(/overall\s*(score)?\s*:\s*\d+\/100/i)[0]
-                                      : 'No score available'
-                                  } \n${moment(entry.created_at).format('YYYY-MM-DD')}`
-                                  )}
+                                      : 'No score available'}`
+                                      )}
                                 <FaTrash className="delete-icon" onClick={(e) => {
                                     e.stopPropagation(); // Prevent button click event when clicking the icon
                                     handleDelete(entry.id);

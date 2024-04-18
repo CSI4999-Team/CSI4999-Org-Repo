@@ -127,3 +127,9 @@ ul {
     color: #ffffff; /* Dark gray color for text */
 }
 
+.entry-date {
+    font-size: 10px;  /* Smaller font size for a subtle appearance */
+    color: #A8A8A8;  /* Light grey to not dominate over the main content */
+    text-align: left;
+    margin-bottom: 5px;  /* Space before the main entry starts */
+}

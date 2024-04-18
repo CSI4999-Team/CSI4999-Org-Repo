@@ -25,7 +25,8 @@ def get_user_data(request, auth0_id):
                     'id': user_data.id,
                     'job_description': user_data.job_description,
                     'resume_text': user_data.resume_text,
-                    'recommendation_text': user_data.recommendation_text
+                    'recommendation_text': user_data.recommendation_text,
+                    'created_at': user_data.created_at
                 } for user_data in user_data_list
             ]
             return JsonResponse(data, safe=False)  # `safe=False` is needed when returning a list
