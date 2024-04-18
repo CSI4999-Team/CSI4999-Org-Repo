@@ -47,6 +47,7 @@ function App() {
 
   useEffect(() => {
     if (isUploading) {
+      window.scrollTo(0, document.body.scrollHeight);
       disableBodyScroll();
     } else {
       enableBodyScroll();
