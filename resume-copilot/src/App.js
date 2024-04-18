@@ -44,24 +44,26 @@ function App() {
   const disableBodyScroll = () => document.body.classList.add('no-scroll');
   const enableBodyScroll = () => document.body.classList.remove('no-scroll');
   const [run, setRun] = useState(false);
-  const [steps, setSteps] = useState([
+  const steps = [
     {
-      target: '.my-first-step',
-      content: 'This is my awesome feature!',
+      target: '.main-choices .choice-button.right',  // More specific selector
+      content: 'Click here to select the method for pasting your job description directly into the form.',
+      placement: 'top',  // Adjust this based on the layout and space available
     },
     {
-      target: '.my-other-step',
-      content: 'This another awesome feature!',
+      target: '.submit-button', // Another example targeting a different button or element
+      content: 'Submit your job description here to proceed.',
+      placement: 'top',
     }
-  ]);
-  const handleJoyrideCallback = (data) => {
-    const { status } = data;
-    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
-      setRun(false);
-    }
-  };
+  ];
+  
 
   /* Functions */
+
+  const handleStartTour = () => {
+    console.log("Starting the tour");
+    setRun(true);
+  };
 
   useEffect(() => {
     if (isUploading) {
@@ -320,6 +322,20 @@ const handleRefresh = () => {
                 <Link className="link"to="/privacy-policy">Privacy Policy</Link>
                 <Link className="link"to="/terms-and-conditions">Terms and Conditions</Link>
               </nav>
+              <button className="tour-start-button" onClick={handleStartTour}>?</button>
+              <Joyride
+                continuous={true}
+                run={run}
+                steps={steps}
+                scrollToFirstStep={true}
+                showProgress={true}
+                showSkipButton={true}
+                styles={{
+                  options: {
+                    zIndex: 10000,
+                  },
+                }}
+              />
             <div className="menu-container">
               <button onClick={toggleMenu} className="hamburger-menu">☰</button>
               {isMenuOpen && (
@@ -349,21 +365,6 @@ const handleRefresh = () => {
             >
               <h3 className="Welcome-Words">Welcome to</h3>
               <h1 className="Resume-Title">Resume Co-Pilot</h1>
-            </div>
-
-            <div>
-              <Joyride
-                callback={handleJoyrideCallback}
-                run={run}
-                steps={steps}
-                continuous={true}
-                scrollToFirstStep={true}
-                showProgress={true}
-                showSkipButton={true}
-              />
-              <button onClick={() => setRun(true)}>Start Tour</button>
-              <div className='my-first-step'>First Step</div>
-              <div className='my-other-step'>Second Step</div>
             </div>
             <div className="transition-container">
             <TransitionGroup component={null}>
