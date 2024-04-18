@@ -5,14 +5,24 @@ import UploadForm from './components/UploadForm';
 import ReactMarkdown from 'react-markdown';
 import LogoutButton from './components/Logout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import "./App.css";
 // Import pages from components
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
+import ManageAccount from './components/ManageAccount'
+import ChangePreferences from './components/ChangePreferences'
+
 import UserProfile from "./components/UserProfile"
+import ToggleButton from "./components/ToggleButton";
+
+function useSidebarVisibility() {
+  const location = useLocation();
+  const hideSidebarOnRoutes = ["/privacy-policy", "/terms-and-conditions", "/tips-and-tricks", "/about-us"];
+  return !hideSidebarOnRoutes.includes(location.pathname);
+}
 
 function App() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
@@ -30,8 +40,22 @@ function App() {
   const [showLoadingBar, setShowLoadingBar] = useState(true); // Show or hide the loading bar
   const [userHistory, setUserHistory] = useState([]);
   const [currentIntervalId, setCurrentIntervalId] = useState(null);
+  const disableBodyScroll = () => document.body.classList.add('no-scroll');
+  const enableBodyScroll = () => document.body.classList.remove('no-scroll');
 
   /* Functions */
+
+  useEffect(() => {
+    if (isUploading) {
+      window.scrollTo(0, document.body.scrollHeight);
+      disableBodyScroll();
+    } else {
+      enableBodyScroll();
+    }
+
+    // Clean-up function to re-enable scrolling when the component unmounts or isUploading changes
+    return () => enableBodyScroll();
+  }, [isUploading]);
 
     // Handler when a history item is clicked
     const handleHistoryItemClick = (entry) => {
@@ -220,7 +244,15 @@ useEffect(() => {
     }
   }, [isLoading, isAuthenticated, loginWithRedirect]);
 
-  if (isLoading) return <div>Loading...</div>;
+  // when website is loading or between screens
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-circle"></div>
+      </div>
+    );
+  }
+  
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -240,6 +272,14 @@ useEffect(() => {
       </div>
     );
   };
+
+/* User can reset session */
+const handleRefresh = () => {
+  if (window.confirm("Are you sure you want to start a new session? \nNote: Your feedback data is already saved in your user history tab.")) {
+    window.location.reload(true); // The 'true' parameter forces the browser to get the latest version from the server and not from cache
+  }
+};
+
   
 
   /* App Login returned to User */
@@ -253,7 +293,10 @@ useEffect(() => {
             {/* Other content */}
             <nav className="pagelinks">
                 {/* Updated navigation links */}
-                <Link className="link"to="/">Home</Link>
+                <Link className="link" to="/" onClick={(e) => {
+                  e.preventDefault(); // Prevent the default Link behavior
+                  window.location.href = '/'; // Force the browser to reload the page
+                }}>Home</Link>
                 <Link className="link"to="/tips-and-tricks">Tips and Tricks</Link>
                 <Link className="link"to="/about-us">About the Creators</Link>
                 <Link className="link"to="/privacy-policy">Privacy Policy</Link>
@@ -270,13 +313,7 @@ useEffect(() => {
               )}
             </div>
           </header>
-          <div className="toggle-button" onClick={toggleSidebar}>
-            <img
-              src="./arrow-right.svg"
-              alt="An arrow"
-              style={{ transform: sidebarOpen ? "scaleX(-1)" : "scaleX(1)" }}
-            />
-          </div>
+          <ToggleButton sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} setSidebarOpen={setSidebarOpen} />
           <main className="App-main">
           <Routes>
           <Route path="/" element={
@@ -378,10 +415,13 @@ useEffect(() => {
               )}
               {currentStep === 5 && analysisResult && (
                 <CSSTransition key="savedResults" timeout={1000} classNames="fade">
+                  <div>
+                  <button onClick={handleRefresh} className="refresh-button">Start New Feedback Session</button>
                     <div className="analysisResultMarkdownContainer">
                         <ReactMarkdown>{analysisResult}</ReactMarkdown>
                         <h3>Job Description:</h3>
                         <p>{jobDescription}</p>
+                    </div>
                     </div>
                 </CSSTransition>
               )}
@@ -393,6 +433,8 @@ useEffect(() => {
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/tips-and-tricks" element={<TipsAndTricks />} />
             <Route path="/about-us" element={<AboutUs />}/>
+            <Route path="/manage-account" element={<ManageAccount />}/>
+            <Route path="/change-preferences" element={<ChangePreferences />}/>
           </Routes>
           </main>
         </div>

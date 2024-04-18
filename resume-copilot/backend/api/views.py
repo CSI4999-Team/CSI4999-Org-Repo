@@ -146,7 +146,7 @@ def analyze_resume(request):
                     (10 points) - This will be straightforward for you to analyze, mainly play the role of an ATS system and make sure the User's resume can check as many boxes matching the job description provided, or if "General Feedback" is selected, ensure common and relevant skills to the User are included or suggested, but ensure the User does not lie or claim to have skills they do not have, in that case lightly suggest upskilling/training. Again, these are domain and role specific, so be professional and keep the User's relevant experience, targeted job level (entry level vs experienced vs senior, etc) in mind.
 
                     6 - Overall Presentation / Formatting
-                    (10 points) - You may need to be generous on this feature, PLEASE INCLUDE a short disclaimer saying that "Although Resume Co-Pilot does not yet support GPT-Vision integration, ..." then award what you can as accurately for the 10 points in this category.
+                    (10 points) - You may need to be generous on this feature, PLEASE INCLUDE a short disclaimer saying that "Although Resume Co-Pilot does not yet support GPT-Vision integration, ..." then award what you can as accurately for the 10 points in this category. YOU MUST AWARD SOMETHING / 10 POINTS.
 
 
                     (Totaling 100 total points to be awarded to the User)

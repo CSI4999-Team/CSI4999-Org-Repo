@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useTransform, useScroll } from "framer-motion";
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaInfoCircle } from 'react-icons/fa';  // Make sure FaInfoCircle is imported here
 import "./LeftBar.css";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -8,10 +8,19 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
     const { user } = useAuth0();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const targetRef = useRef(null);
-    const { scrollXProgress } = useScroll({
-        target: targetRef,
-        axis: "x",
-    });
+    const { scrollXProgress } = useScroll({ target: targetRef, axis: "x" });
+    const [showTooltip, setShowTooltip] = useState(false);
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+
+    const handleTooltipToggle = () => {
+        if (!showTooltip) {
+            setTooltipVisible(true);  // Immediately make the tooltip part of the DOM
+            setTimeout(() => setShowTooltip(true), 10);  // Slightly delay the visibility to catch the transition
+        } else {
+            setShowTooltip(false);  // Hide tooltip
+            setTimeout(() => setTooltipVisible(false), 250);  // Remove from DOM after transitions
+        }
+    };
 
     const handleDelete = async (entryId) => {
         console.log("Attempting to delete entry with ID:", entryId);  // Log the ID being received
@@ -31,7 +40,6 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
     };  
 
     const [userHistory, setUserHistory] = useState([]);
-    const [hoveredHistoryItem, setHoveredHistoryItem] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -56,7 +64,6 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
     }, [user]);
 
     const x = useTransform(scrollXProgress, [0, 1], ["0%", "-95%"]);
-
     const tipsAndTricks = [
         { tip: "Always build your experience in reverse chronological order" },
         { tip: "95% of hiring teams prefer one to two pages max" },
@@ -70,30 +77,48 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
             style={{ x, backgroundColor: "#282C34", overflowY: 'auto' }} // added overflowY for scrolling
         >
             <h2 className="prevRes">User History</h2>
-            {userHistory.length > 0 ? (
-              <ul>
-                {userHistory.map((entry, index) => (
-                    <li key={index} className="history-item">
-                        <button className="ResButtons" onClick={() => onHistoryItemClick(entry)}>
-                            {entry.job_description ? entry.job_description.split(' ').slice(0, 5).join(' ') + '...' : 'General Feedback'}
-                            <FaTrash className="delete-icon" onClick={(e) => {
-                                e.stopPropagation(); // Prevent button click event when clicking the icon
-                                handleDelete(entry.id);
-                            }} />
-                        </button>
-                    </li>
-                ))}
-            </ul>            
+            {isLoading ? (
+                <div>Loading your history...</div>
+            ) : userHistory.length > 0 ? (
+                <ul>
+                    {userHistory.map((entry, index) => (
+                        <li key={index} className="history-item">
+                            <button className="ResButtons" onClick={() => onHistoryItemClick(entry)}>
+                                {entry.job_description ? entry.job_description.split(' ').slice(0, 5).join(' ') + '...' : 'General Feedback'}
+                                <FaTrash className="delete-icon" onClick={(e) => {
+                                    e.stopPropagation(); // Prevent button click event when clicking the icon
+                                    handleDelete(entry.id);
+                                }} />
+                            </button>
+                        </li>
+                    ))}
+                </ul>            
             ) : (
                 <>
-                    <h3 className="tiplabel">Pro tip</h3>
-                    <ul className="tnt">
-                        {tipsAndTricks.map((tip, index) => (
-                            <li key={index}>
-                                <div className="tip">{tip.tip}</div>
-                            </li>
-                        ))}
-                    </ul>
+                    <h3 className="tiplabel">
+                        <button 
+                            onClick={handleTooltipToggle}
+                            style={{ background: "none", border: "none", cursor: "pointer", padding: "0", display: "inline-flex", alignItems: "center" }}
+                        >
+                            <FaInfoCircle size={14} style={{ marginRight: "8px" }}/>
+                            No history yet!
+                        </button>
+                    </h3>
+                    {tooltipVisible && (
+                    <div className={`tooltip ${showTooltip ? "visible" : ""}`}>
+                        Your history will automatically load here after you use our site.
+                    </div>
+                    )}
+                    <div className="tips-container">
+                        <h4 className="tiplabel">Pro Tips:</h4>
+                        <ul className="tnt">
+                            {tipsAndTricks.map((tip, index) => (
+                                <li key={index}>
+                                    <div className="tip">{tip.tip}</div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </>
             )}
         </motion.div>
