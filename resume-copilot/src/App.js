@@ -14,6 +14,7 @@ import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
 import ManageAccount from './components/ManageAccount'
 import ChangePreferences from './components/ChangePreferences'
+import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
 
 import UserProfile from "./components/UserProfile"
 import ToggleButton from "./components/ToggleButton";
@@ -42,6 +43,23 @@ function App() {
   const [currentIntervalId, setCurrentIntervalId] = useState(null);
   const disableBodyScroll = () => document.body.classList.add('no-scroll');
   const enableBodyScroll = () => document.body.classList.remove('no-scroll');
+  const [run, setRun] = useState(false);
+  const [steps, setSteps] = useState([
+    {
+      target: '.my-first-step',
+      content: 'This is my awesome feature!',
+    },
+    {
+      target: '.my-other-step',
+      content: 'This another awesome feature!',
+    }
+  ]);
+  const handleJoyrideCallback = (data) => {
+    const { status } = data;
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      setRun(false);
+    }
+  };
 
   /* Functions */
 
@@ -331,6 +349,21 @@ const handleRefresh = () => {
             >
               <h3 className="Welcome-Words">Welcome to</h3>
               <h1 className="Resume-Title">Resume Co-Pilot</h1>
+            </div>
+
+            <div>
+              <Joyride
+                callback={handleJoyrideCallback}
+                run={run}
+                steps={steps}
+                continuous={true}
+                scrollToFirstStep={true}
+                showProgress={true}
+                showSkipButton={true}
+              />
+              <button onClick={() => setRun(true)}>Start Tour</button>
+              <div className='my-first-step'>First Step</div>
+              <div className='my-other-step'>Second Step</div>
             </div>
             <div className="transition-container">
             <TransitionGroup component={null}>
