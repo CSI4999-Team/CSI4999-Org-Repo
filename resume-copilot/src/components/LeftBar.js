@@ -88,8 +88,12 @@ const LeftBar = ({ isOpen, onHistoryItemClick, onDeleteHistoryItem }) => {
                             {entry.job_description ? (
                                 entry.job_description.split(' ').slice(0, 5).join(' ') + '...'
                             ) : (
-                                `General feedback - ${entry.recommendation_text.match(/overall\s*(score)?\s*:\s*\d+\/100/i) || 'No score available'} - Created at: ${moment(entry.created_at).format('YYYY-MM-DD HH:mm:ss')}`
-                            )}
+                                `General feedback - ${
+                                    entry.recommendation_text.match(/overall\s*(score)?\s*:\s*\d+\/100/i) 
+                                      ? entry.recommendation_text.match(/overall\s*(score)?\s*:\s*\d+\/100/i)[0]
+                                      : 'No score available'
+                                  } \n${moment(entry.created_at).format('YYYY-MM-DD')}`
+                                  )}
                                 <FaTrash className="delete-icon" onClick={(e) => {
                                     e.stopPropagation(); // Prevent button click event when clicking the icon
                                     handleDelete(entry.id);

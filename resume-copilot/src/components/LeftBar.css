@@ -1,11 +1,15 @@
 .left-bar {
-    /* padding: 0px; */
-    /* border-top-right-radius: 10px; */
-    /* border-bottom-right-radius: 10px; */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: hsl(220, 13%, 18%);
     z-index: 1000;
-    overflow-y: auto; /* Enables vertical scrolling if content overflows */
+    overflow-y: auto;
+    padding: 0px;
+    width: 250px; /* Set a fixed width for the sidebar */
+    position: fixed; /* Make the sidebar fixed to the side of the window */
+    top: 0;
+    bottom: 0;
+    left: 0; /* Adjust this to 'right: 0;' if you want the sidebar on the right */
+    transition: transform 0.3s ease-in-out;
 }
 
 .prevRes {
@@ -50,7 +54,7 @@ ul {
 
 .ResButtons {
     position: relative; /* Added relative positioning */
-    padding: 10px;
+    padding: 5px;
     background-color: #23272e;
     outline-color: white;
     outline-width: 10px;
@@ -58,14 +62,15 @@ ul {
     text-align: left; /* Align text to the left */
     color: white; /* Text color */
     border: none; /* Remove border */
+    font-size: 18px;
 }
 
 .delete-icon {
     position: absolute; /* Positioning icon absolutely within the button */
-    right: 10px; /* Positioned to the right within the button */
+    right: 4px; /* Positioned to the right within the button */
     top: 50%; /* Center vertically */
     transform: translateY(-50%); /* Align center with the text vertically */
-    color: rgb(210, 210, 210);
+    color: rgb(193, 193, 193);
     cursor: pointer;
     visibility: hidden; /* Make icon hidden initially */
 }
