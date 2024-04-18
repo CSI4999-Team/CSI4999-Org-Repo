@@ -1,0 +1,25 @@
+.preferences-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #004d69;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.preferences-info {
+    margin-bottom: 20px;
+}
+
+.note-box {
+    padding: 10px;
+    background-color: #fffbe6;  /* Light yellow background */
+    border-left: 5px solid #ffc107;  /* Highlighting border on the left */
+    color: #333;
+    font-style: italic;
+}
+
+.note-box p {
+    margin: 0;  /* Remove default paragraph margin */
+}

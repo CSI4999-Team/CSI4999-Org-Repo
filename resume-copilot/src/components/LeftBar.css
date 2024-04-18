@@ -25,6 +25,7 @@ h2 {
     color: #A8A8A8;
     font-size: 24px;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 h3 {
@@ -35,9 +36,6 @@ h3 {
     font-size: 15px;
     justify-content: center;
 
-}
-.tip {
-    margin-bottom: 10px;
 }
 
 ul {
@@ -74,3 +72,52 @@ ul {
 .ResButtons:hover .delete-icon {
     visibility: visible; /* Only show icon on hover */
 }
+
+.tooltip {
+    padding: 8px;
+    margin-top: 4px;
+    margin: 4px auto;
+    background-color: #A8A8A8;
+    color: #333;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    position: relative;
+    width: 80%;
+    text-align: left;
+    display: block;
+    font-size: 0.7em;
+    opacity: 0; /* Start with the tooltip invisible */
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, max-height 0.3s ease-in-out; /* Longer transition duration */
+    max-height: 0; /* Start with no content showing */
+}
+
+.tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    max-height: 200px;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0s, max-height 0.3s ease-in-out; 
+}
+
+.tips-container {
+    padding: 5px; /* Reduced padding for a more compact container */
+    margin: 5px 2px; /* Slight margin around the container for spacing within the sidebar */
+    width: calc(100% - 10px); /* Full width with minimal margin on the sides */
+}
+
+.tips-container .tip {
+    background-color: #4f4f4f; /* Soft blue background */
+    border: 1px solid #1DB8D4; /* Lighter blue border for some depth */
+    padding: 5px 10px; /* Smaller padding for a more compact appearance */
+    margin: 5px auto; /* Vertical margin for spacing, auto horizontally centers the box */
+    border-radius: 5px; /* Soft rounded edges */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Lighter shadow for a subtle lift effect */
+    width: 90%; /* Slightly narrower width than full container width */
+    display: flex; /* Using flexbox for alignment */
+    justify-content: flex-start; /* Align text to the start (left) */
+    align-items: center; /* Center text vertically */
+    text-align: left; /* Text inside should align to the left */
+    font-size: 1.0em; /* Smaller font size */
+    color: #ffffff; /* Dark gray color for text */
+}
+
