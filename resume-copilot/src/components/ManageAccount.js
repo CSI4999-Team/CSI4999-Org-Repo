@@ -18,6 +18,12 @@ const ManageAccount = () => {
         });
     };
 
+    const handleSubscriptionClick = () => {
+        setTimeout(() => {
+            navigate('/about-resume-co-pilot-plus'); //navigate to subscription info page
+        });
+    };
+
     return (
         isAuthenticated && (
             <div className="manage-account-container">
@@ -32,6 +38,7 @@ const ManageAccount = () => {
                 <div className="note-box">
                     <p>Work in Progress - Soon you will be able to Delete and Update your account</p>
                 </div>
+                <button onClick={handleSubscriptionClick} className="subscription-button">Learn about Resume Co-Pilot+</button>
                 <button onClick={handleHomeClick} className="home-button">Take Me Home</button>
             </div>
         )

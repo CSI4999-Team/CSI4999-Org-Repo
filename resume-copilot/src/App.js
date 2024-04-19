@@ -14,6 +14,7 @@ import TipsAndTricks from './components/TipsAndTricks';
 import AboutUs from './components/AboutUs';
 import ManageAccount from './components/ManageAccount'
 import ChangePreferences from './components/ChangePreferences'
+import AboutResumeCoPilotPlus from './components/AboutResumeCoPilotPlus';
 
 import UserProfile from "./components/UserProfile"
 import ToggleButton from "./components/ToggleButton";
@@ -43,6 +44,14 @@ function App() {
   const disableBodyScroll = () => document.body.classList.add('no-scroll');
   const enableBodyScroll = () => document.body.classList.remove('no-scroll');
 
+  const userRoles = user?.['https://resumecopilot.us/roles'] || [];
+  const AboutResumeCoPilotPlusRoute = () => {
+    if (isLoading) return <div>Loading...</div>;
+    if (!isAuthenticated || (userRoles.includes('Resume Co-Pilot+')) ) {
+      return <div>Access Denied</div>;
+    }
+    return <AboutResumeCoPilotPlus />;
+  };
   /* Functions */
 
   useEffect(() => {
@@ -435,6 +444,7 @@ const handleRefresh = () => {
             <Route path="/about-us" element={<AboutUs />}/>
             <Route path="/manage-account" element={<ManageAccount />}/>
             <Route path="/change-preferences" element={<ChangePreferences />}/>
+            <Route path="/about-resume-co-pilot-plus" element={<AboutResumeCoPilotPlusRoute />} />
           </Routes>
           </main>
         </div>
