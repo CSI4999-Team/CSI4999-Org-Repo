@@ -69,6 +69,11 @@ const [steps, setSteps] = useState([
 
   /* Functions */
 
+  const handleStartTour = () => {
+    console.log("Starting the tour");
+    setRun(true);
+  };
+
   useEffect(() => {
     if (isUploading) {
       window.scrollTo(0, document.body.scrollHeight);
@@ -326,6 +331,20 @@ const handleRefresh = () => {
                 <Link className="link"to="/privacy-policy">Privacy Policy</Link>
                 <Link className="link"to="/terms-and-conditions">Terms and Conditions</Link>
               </nav>
+              <button className="tour-start-button" onClick={handleStartTour}>?</button>
+              <Joyride
+                continuous={true}
+                run={run}
+                steps={steps}
+                scrollToFirstStep={true}
+                showProgress={true}
+                showSkipButton={true}
+                styles={{
+                  options: {
+                    zIndex: 10000,
+                  },
+                }}
+              />
             <div className="menu-container">
               <button onClick={toggleMenu} className="hamburger-menu">☰</button>
               {isMenuOpen && (
