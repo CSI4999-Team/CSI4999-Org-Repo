@@ -331,7 +331,6 @@ const handleRefresh = () => {
                 <Link className="link"to="/privacy-policy">Privacy Policy</Link>
                 <Link className="link"to="/terms-and-conditions">Terms and Conditions</Link>
               </nav>
-              <button className="tour-start-button" onClick={handleStartTour}>?</button>
               <Joyride
                 continuous={true}
                 run={run}
