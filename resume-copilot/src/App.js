@@ -44,16 +44,22 @@ function App() {
   const disableBodyScroll = () => document.body.classList.add('no-scroll');
   const enableBodyScroll = () => document.body.classList.remove('no-scroll');
   const [run, setRun] = useState(false);
-  const [steps, setSteps] = useState([
-    {
-      target: '.my-first-step',
-      content: 'This is my awesome feature!',
-    },
-    {
-      target: '.my-other-step',
-      content: 'This another awesome feature!',
-    }
-  ]);
+// At the beginning of your App component where you define states
+const [steps, setSteps] = useState([
+  {
+    target: '.choice-button.left',
+    content: 'You can upload your job URL here!',
+  },
+  {
+    target: '.choice-button.right',
+    content: 'You can manually upload the job description here!',
+  },
+  {
+    target: '.skip-button',
+    content: 'If you just want Resume Co-Pilot to analyze your resume click here!',
+  }
+]);
+
   const handleJoyrideCallback = (data) => {
     const { status } = data;
     if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
@@ -330,6 +336,7 @@ const handleRefresh = () => {
                 </div>
               )}
             </div>
+            <button onClick={() => setRun(true)}className="tour-start-button">?</button>
           </header>
           <ToggleButton sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} setSidebarOpen={setSidebarOpen} />
           <main className="App-main">
@@ -361,9 +368,6 @@ const handleRefresh = () => {
                 showProgress={true}
                 showSkipButton={true}
               />
-              <button onClick={() => setRun(true)}>Start Tour</button>
-              <div className='my-first-step'>First Step</div>
-              <div className='my-other-step'>Second Step</div>
             </div>
             <div className="transition-container">
             <TransitionGroup component={null}>
