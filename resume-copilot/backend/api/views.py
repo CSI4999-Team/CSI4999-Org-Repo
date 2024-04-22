@@ -4,6 +4,9 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import openai
 import os
+import base64
+import io
+import re
 import fitz  # PyMuPDF for PDF processing
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -92,71 +95,128 @@ def analyze_resume(request):
             data = json.loads(request.body)  # Correctly load the JSON data sent from the frontend
             resume_text = data.get('resume_text', '')  # Access the resume_text directly from the loaded JSON
             user_message = data.get('user_message', '')  # Assuming you want to pass this from frontend as well
+            output_method = data.get('output_method', '')
+            pdfBase64 = data.get('pdf_base64')
         
             confirm_skip = data.get('confirm_skip', False) # Default to False if not provided
             job_desc = data.get('job_desc', '')
             user_id = data.get('user_id', '')
 
-            if confirm_skip:
-                # If user chooses to skip, assign a custom prompt to job_description
-                job_description = "The user has not provided a specific job description and has opted for general feedback. Please begin your expert response with 'Having opted for general feedback, ...'"
+            if output_method == 'text':
+
+                if confirm_skip:
+                    # If user chooses to skip, assign a custom prompt to job_description
+                    job_description = "The user has not provided a specific job description and has opted for general feedback. Please begin your expert response with 'Having opted for general feedback, ...'"
+                else:
+                    # Otherwise, use the provided job description
+                    job_description = job_desc
+                    
+                # Create a new UserData entry
+                user_data = UserData.objects.create(
+                    auth0_id=user_id,
+                    job_description=job_description,
+                    resume_text=resume_text
+                )
+                user_data.save()
+
+                # Make a single request to the OpenAI API using the user message
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": """ You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. 
+
+                        Please provide some tailored feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. 
+
+                        Please attempt to follow this template for "ratings" in addition to your own "expert" comments:
+
+                        Feel free to "phrase" this professionally, make sure to independently decide each score, do not aim for a target score
+
+                        You MUST provide a SUB SCORE clearly to the User, such as 5/20 points
+
+                        1 - Introduction Section / Career Focus (10 points) - Keep in mind, this is often the first part of the resume, this is the easiest you can deduct points on if given a custom job description as tailoring the first introductory line to include something relevant to the specific job title or company can earn points in the ATS systems. If selecting "Generic Feedback" feel free to be a tad more generous, but be professional.
+
+                        2 - Education / Certifications
+                        (20 points) - Use your expert, domain specific opinion, include factors such as GPA, quality of academic institution, relevant certifications if applicable to the User's field, etc.
+
+                        3 - Projects / Miscellaneous Experiences
+                        (20 points) - Hiring managers and technical recruiters, similar to expert-AI such as you, Resume Co-Pilot, often love to see passion projects on resumes, plus if it is applicable to their field, feel free to professionally remind the user their relevant project could be useful during an interview.
+
+                        4 - Relevant Work Experience
+                        (30 points) - This is an extremely weighty part of the User's resume that can make or break potential employment or job application prospects. Relevant experience is HUGE in nearly all fields, but again apply your domain specific, expert knowledge!
+
+                        5- Skills / Miscelaneous Skills
+                        (10 points) - This will be straightforward for you to analyze, mainly play the role of an ATS system and make sure the User's resume can check as many boxes matching the job description provided, or if "General Feedback" is selected, ensure common and relevant skills to the User are included or suggested, but ensure the User does not lie or claim to have skills they do not have, in that case lightly suggest upskilling/training. Again, these are domain and role specific, so be professional and keep the User's relevant experience, targeted job level (entry level vs experienced vs senior, etc) in mind.
+
+                        6 - Overall Presentation / Formatting
+                        (10 points) - You may need to be generous on this feature, PLEASE INCLUDE a short disclaimer saying that "Although Resume Co-Pilot does not yet support GPT-Vision integration, ..." then award what you can as accurately for the 10 points in this category. YOU MUST AWARD SOMETHING / 10 POINTS.
+
+
+                        (Totaling 100 total points to be awarded to the User)
+
+                        Each field is unique, so tailor what would be expected to the User's targeted job field or role.
+
+                        Reminder: You must include a total overall score out of 100 points as well, ideally formatted as *[score]/100*
+                        -------
+
+                        I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, there will be a generic feedback message.
+                        """},
+                        {"role": "user", "content": resume_text},  # Resume text as context
+                        {"role": "user", "content": job_description}
+                    ],
+                    model="gpt-3.5-turbo",
+                )
+
             else:
-                # Otherwise, use the provided job description
-                job_description = job_desc
-                
-            # Create a new UserData entry
-            user_data = UserData.objects.create(
-                auth0_id=user_id,
-                job_description=job_description,
-                resume_text=resume_text
-            )
-            user_data.save()
 
-            # Make a single request to the OpenAI API using the user message
-            chat_completion = client.chat.completions.create(
-                messages=[
-                    {"role": "system", "content": """ You are Resume Co-Pilot. Please take on the role of an expert resume feedback AI-agent familiar with all knowledge pertaining to a hiring manager and professional technical recruiter for [insert user's company they are applying to]. 
+                try:
+                    pdfFile = base64.b64decode(pdfBase64)
+                    doc = fitz.open(stream=io.BytesIO(pdfFile), filetype='pdf')
+                    resumeText = ''
+                    for page in doc:
+                        resumeText += page.get_text()
 
-                    Please provide some tailored feedback for the candidate's resume, suggestions that could better align the resume to the role, a rating on a score of 100 based on your experience as a recruiter and hiring manger compared to other potential candidates, etc. 
+                    chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": "Based on this job description: \"" + job_desc + "\" and this resume: \"" + resumeText + "\" I need you to give me a list of words in the resume that match favorably to the job description. Output one word on each line wrapped in quotes"},
+                    ],
+                    model="gpt-3.5-turbo",
+                    )
+                    response_text = chat_completion.choices[0].message.content.strip()
+                    goodWords = extract_quoted_words(response_text)
 
-                    Please attempt to follow this template for "ratings" in addition to your own "expert" comments:
+                    highlightedWords = set()
 
-                    Feel free to "phrase" this professionally, make sure to independently decide each score, do not aim for a target score
+                    for page in doc:
+                        for word in goodWords:
+                            for matchedWord in page.search_for(word):
+                                if matchedWord not in highlightedWords:
+                                    page.add_highlight_annot(matchedWord).set_colors({'stroke': (0, 1, 0)})
+                                    highlightedWords.add(matchedWord)
 
-                    You MUST provide a SUB SCORE clearly to the User, such as 5/20 points
+                    chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": "Based on this job description: \"" + job_desc + "\" and this resume: \"" + resumeText + "\" I need you to give me a list of words in the resume that you think are irrelevant to the job description. Output one word on each line wrapped in quotes"},
+                    ],
+                    model="gpt-3.5-turbo",
+                    )
+                    response_text = chat_completion.choices[0].message.content.strip()
+                    badWords = extract_quoted_words(response_text)
 
-                    1 - Introduction Section / Career Focus (10 points) - Keep in mind, this is often the first part of the resume, this is the easiest you can deduct points on if given a custom job description as tailoring the first introductory line to include something relevant to the specific job title or company can earn points in the ATS systems. If selecting "Generic Feedback" feel free to be a tad more generous, but be professional.
+                    badWords = subtract_lists(badWords, goodWords)
 
-                    2 - Education / Certifications
-                    (20 points) - Use your expert, domain specific opinion, include factors such as GPA, quality of academic institution, relevant certifications if applicable to the User's field, etc.
+                    for page in doc:
+                        for word in badWords:
+                            for matchedWord in page.search_for(word):
+                                if matchedWord not in highlightedWords:
+                                    page.add_highlight_annot(matchedWord).set_colors({'stroke': (1, 0, 0)})
+                                    highlightedWords.add(matchedWord)
 
-                    3 - Projects / Miscellaneous Experiences
-                    (20 points) - Hiring managers and technical recruiters, similar to expert-AI such as you, Resume Co-Pilot, often love to see passion projects on resumes, plus if it is applicable to their field, feel free to professionally remind the user their relevant project could be useful during an interview.
-
-                    4 - Relevant Work Experience
-                    (30 points) - This is an extremely weighty part of the User's resume that can make or break potential employment or job application prospects. Relevant experience is HUGE in nearly all fields, but again apply your domain specific, expert knowledge!
-
-                    5- Skills / Miscelaneous Skills
-                    (10 points) - This will be straightforward for you to analyze, mainly play the role of an ATS system and make sure the User's resume can check as many boxes matching the job description provided, or if "General Feedback" is selected, ensure common and relevant skills to the User are included or suggested, but ensure the User does not lie or claim to have skills they do not have, in that case lightly suggest upskilling/training. Again, these are domain and role specific, so be professional and keep the User's relevant experience, targeted job level (entry level vs experienced vs senior, etc) in mind.
-
-                    6 - Overall Presentation / Formatting
-                    (10 points) - You may need to be generous on this feature, PLEASE INCLUDE a short disclaimer saying that "Although Resume Co-Pilot does not yet support GPT-Vision integration, ..." then award what you can as accurately for the 10 points in this category. YOU MUST AWARD SOMETHING / 10 POINTS.
-
-
-                    (Totaling 100 total points to be awarded to the User)
-
-                    Each field is unique, so tailor what would be expected to the User's targeted job field or role.
-
-                    Reminder: You must include a total overall score out of 100 points as well, ideally formatted as *[score]/100*
-                    -------
-
-                    I will first provide the user's parsed resume, followed by the users job description, if stated. Otherwise, there will be a generic feedback message.
-                     """},
-                    {"role": "user", "content": resume_text},  # Resume text as context
-                    {"role": "user", "content": job_description}
-                ],
-                model="gpt-3.5-turbo",
-            )
+                    modified_pdf = io.BytesIO()
+                    doc.save(modified_pdf)
+                    doc.close()
+                    modified_pdf.seek(0)
+                    return HttpResponse(modified_pdf.read(), content_type='application/pdf')
+                except Exception as e:
+                    print('the error is!!!! ' + str(e))
 
             # Ensure the response is in text format
             response_text = chat_completion.choices[0].message.content.strip()
@@ -176,3 +236,12 @@ def analyze_resume(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+def extract_quoted_words(text):
+    pattern = r'"([^"]+)"'
+    quoted_words = re.findall(pattern, text)
+    
+    return quoted_words
+
+def subtract_lists(list1, list2):
+    return [item for item in list1 if item not in list2]

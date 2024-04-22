@@ -42,6 +42,8 @@ function App() {
   const [currentIntervalId, setCurrentIntervalId] = useState(null);
   const disableBodyScroll = () => document.body.classList.add('no-scroll');
   const enableBodyScroll = () => document.body.classList.remove('no-scroll');
+  const [outputMethod, setOutputMethod] = useState(null); // 'text' or 'overlay'
+  const [pdfBlob, setPdfBlob] = useState(null);
 
   /* Functions */
 
@@ -169,18 +171,20 @@ const handleSkip = () => {
       setCurrentStep(3); // Move to the result display step
 
       // Initialize the "dripping" effect for displaying the analysis results
-      const chunkSize = 5;
-      let currentIndex = 0;
-      const interval = setInterval(() => {
-        if (currentIndex < analysisResult.length) {
-          const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
-          const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
-          setAnalysisResult(prevResult => prevResult + nextChunk);
-          currentIndex += chunkSize;
-        } else {
-          clearInterval(interval);
-        }
-      }, 50);
+      if (outputMethod == 'text') {
+        const chunkSize = 5;
+        let currentIndex = 0;
+        const interval = setInterval(() => {
+          if (currentIndex < analysisResult.length) {
+            const nextChunkEndIndex = Math.min(currentIndex + chunkSize, analysisResult.length);
+            const nextChunk = analysisResult.substring(currentIndex, nextChunkEndIndex);
+            setAnalysisResult(prevResult => prevResult + nextChunk);
+            currentIndex += chunkSize;
+          } else {
+            clearInterval(interval);
+          }
+        }, 50);
+      }
     }, 3000); // This delay simulates the wait time for the analysis to complete
   };
 
@@ -264,10 +268,21 @@ useEffect(() => {
       <div className="choices-container">
         <div className="main-choices">
           <button className="choice-button left" onClick={() => { setInputMethod('url'); setCurrentStep(2); }}>Use a URL</button>
-          <button className="choice-button right" onClick={() => { setInputMethod('description'); setCurrentStep(2); }}>Copy Paste a Job Description</button>
+          <button className="choice-button right" onClick={() => { setInputMethod('description'); setCurrentStep(10); }}>Copy Paste a Job Description</button>
         </div>
         <div className="skip-choice">
           <button className="skip-button" onClick={() => { setInputMethod('general'); setCurrentStep(2); }}>Skip / General Feedback</button>
+        </div>
+      </div>
+    );
+  };
+
+    const renderSecondInputChoice = () => {
+    return (
+      <div className="choices-container">
+        <div className="main-choices">
+          <button className="choice-button left" onClick={() => { setOutputMethod('text'); setCurrentStep(2); }}>Text Advice</button>
+          <button className="choice-button right" onClick={() => { setOutputMethod('overlay'); setCurrentStep(2); }}>Overlayed Advice</button>
         </div>
       </div>
     );
@@ -332,11 +347,21 @@ const handleRefresh = () => {
               <h3 className="Welcome-Words">Welcome to</h3>
               <h1 className="Resume-Title">Resume Co-Pilot</h1>
             </div>
+            {currentStep === 3 && outputMethod === 'overlay' && pdfBlob && (
+                <object type="application/pdf" data={URL.createObjectURL(pdfBlob)} width="100%" height="500" aria-label="Uploaded PDF preview">
+                PDF Viewer not available. You can download the file <a href={URL.createObjectURL(pdfBlob)} download>here</a>.
+                </object>
+              )}
             <div className="transition-container">
             <TransitionGroup component={null}>
               {currentStep === 1 && !inputMethod && (
                 <CSSTransition key={currentStep} timeout={1000} classNames="fade">
                   {renderInputChoice()}
+                </CSSTransition>
+              )}
+              {currentStep === 10 && (
+                <CSSTransition key={currentStep} timeout={1000} classNames="fade">
+                  {renderSecondInputChoice()}
                 </CSSTransition>
               )}
               {currentStep === 2 && (
@@ -383,11 +408,11 @@ const handleRefresh = () => {
                 <CSSTransition key={isUploading ? "loading" : "uploadForm"} timeout={1000} classNames="fade">
                   <div>
                     {!isUploading ? (
-                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip}/>
+                      <UploadForm onAnalysisComplete={handleAnalysisComplete} onStartUploading={startUploading} jobDescription={jobDescription} confirmSkip={confirmSkip} setPdfBlob={setPdfBlob} outputMethod={outputMethod}/>
                     ) : (
                       // Dynamic Loading Screen
                       <div className="loading-screen">
-                      {showLoadingBar && (
+                      {outputMethod != 'overlay' && showLoadingBar && (
                         <>
                           <div className="progress-bar-container">
                             <div className="progress-bar" style={{ width: `${loadingPercentage}%` }}></div>
@@ -398,7 +423,7 @@ const handleRefresh = () => {
                           </div>
                         </>
                       )}
-                      {phase === 3 && (
+                      {outputMethod != 'overlay' && phase === 3 && (
                         <div className="progress-text">Almost there</div>
                       )}
                     </div>
@@ -406,7 +431,7 @@ const handleRefresh = () => {
                   </div>
                 </CSSTransition>
               )}
-              {currentStep === 3 && analysisResult && (
+              {currentStep === 3 && outputMethod === 'text' && analysisResult && (
                 <CSSTransition key="results" timeout={1000} classNames="fade">
                   <div className="analysisResultMarkdownContainer">
                     <ReactMarkdown>{analysisResult}</ReactMarkdown>
